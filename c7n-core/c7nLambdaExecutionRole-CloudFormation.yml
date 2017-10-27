@@ -26,6 +26,11 @@
                   Effect: Allow
                   Resource: "*"
                   Action:
+                    - "xray:PutTelemetryRecords"
+                -
+                  Effect: Allow
+                  Resource: "*"
+                  Action:
                     - "health:DescribeEvents"
                     - "health:DescribeAffectedEntities"
                     - "health:DescribeEventDetails"
@@ -164,6 +169,7 @@
                     - "logs:CreateLogStream"
                     - "logs:DeleteLogGroup"
                     - "logs:DeleteLogGroup"
+                    - "logs:DescribeLogGroups"
                     - "logs:DescribeLogStreams"
                     - "logs:PutLogEvents"
                     - "logs:PutRetentionPolicy"
@@ -248,6 +254,7 @@
                     - "iam:GetAccountPasswordPolicy"
                     - "iam:GetCredentialReport"
                     - "iam:GetGroup"
+                    - "iam:ListAccountAliases"
                     - "iam:ListAccessKeys"
                     - "iam:ListAttachedUserPolicies"
                     - "iam:ListAttachedRolePolicies"

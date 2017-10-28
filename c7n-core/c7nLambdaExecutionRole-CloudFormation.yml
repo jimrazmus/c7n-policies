@@ -209,6 +209,7 @@
                   Resource: "*"
                   Action:
                     - "sqs:SendMessage"
+                    - "sqs:SendMessageBatch"
                     - "sqs:ReceiveMessage"
                     - "sqs:DeleteQueue"
                     - "sqs:GetQueueAttributes"

@@ -1,0 +1,61 @@
+---
+
+  AWSTemplateFormatVersion: 2010-09-09
+  Description: Cloud Custodian Message Queues
+  Resources:
+
+    c7nDeadLetterQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: c7nDeadLetterQueue
+
+    c7nMessageQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: c7nMessageQueue
+        RedrivePolicy:
+          deadLetterTargetArn:
+            Fn::GetAtt:
+              - "c7nDeadLetterQueue"
+              - "Arn"
+          maxReceiveCount: 5
+
+    c7nQueuePolicy:
+      Type: "AWS::SQS::QueuePolicy"
+      Properties:
+        Queues:
+          - !Ref c7nDeadLetterQueue
+          - !Ref c7nMessageQueue
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service: "lambda.amazonaws.com"
+              Action:
+                - "sqs:SendMessage"
+                - "sqs:SendMessageBatch"
+                - "sqs:ReceiveMessage"
+
+  Outputs:
+    c7nMessageQueueURL:
+      Description: "c7nMessageQueue URL"
+      Value:
+        Ref: "c7nMessageQueue"
+    c7nMessageQueueARN:
+      Description: "c7nMessageQueue ARN"
+      Value:
+        Fn::GetAtt:
+          - "c7nMessageQueue"
+          - "Arn"
+    c7nDeadLetterQueueURL:
+      Description: "c7nDeadLetterQueue URL"
+      Value:
+        Ref: "c7nDeadLetterQueue"
+    DeadLetterQueueARN:
+      Description: "c7nDeadLetterQueue ARN"
+      Value:
+        Fn::GetAtt:
+          - "c7nDeadLetterQueue"
+          - "Arn"

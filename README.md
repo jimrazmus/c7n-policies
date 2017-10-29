@@ -18,15 +18,7 @@ You will find the 'custodian' program in your path when the installation is comp
 #> custodian version
 ```
 
-git clone https://github.com/capitalone/cloud-custodian
-virtualenv --python=python2 custodian
-source custodian/bin/activate
-pip install c7n
-cd tools/c7n_mailer/
-pip install -r requirements.txt
-pip install c7n-org
-
-## c7n Policies Repository
+### c7n Policies Repository
 
 Check out a copy of this code repository if you haven't already. All policy documents are managed here.
 
@@ -48,3 +40,15 @@ One or more policies are defined in a yaml file. A policy specifies the followin
 * Actions to take on the filtered set of resources
 
 Policies can be run from your laptop or as AWS Lambdas.
+
+## Deploy Policies as Lambdas
+
+Deploy the lambdas with this command
+
+```
+custodian run \
+-v -m -s ./logs/ -l /YourLogGroup -r all \
+--assume \
+"arn:aws:iam::123123123123:role/c7nLambdaExecutionRole" \
+YourPolicyFile1.yml YourPolicyFile2.yml ...
+```

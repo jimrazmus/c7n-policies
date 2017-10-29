@@ -4,7 +4,8 @@ policies:
     resource: ec2
     comment: |
       Find all (non-ASG) instances that are not conformant
-      to tagging policies, tag them for stoppage in 1 day.
+      to tagging policies, tag them for stoppage in 1 day
+      and send a notification.
     filters:
       - "tag:aws:autoscaling:groupName": absent
       - "tag:c7n_tag_compliance": absent
@@ -20,6 +21,21 @@ policies:
         tag: c7n_tag_compliance
         op: stop
         days: 1
+      - type: notify
+        template: default.html
+        priority_header: 1
+        subject: |
+          "EC2 Instance(s) violate tagging requirements
+          {{ account }}:{{ region }}"
+        violation_desc: "EC2 instances must have the required tags."
+        action_desc: |
+          Offending EC2 instance(s) are now marked to be stopped if the
+          required tags not added within 24 hours.
+        to:
+           - "example"
+        transport:
+             type: sqs
+             queue: c7nMessageQueue
 
   - name: ec2-tag-compliance-unmark
     resource: ec2
@@ -39,6 +55,20 @@ policies:
     actions:
       - type: unmark
         tags: [c7n_tag_compliance]
+      - type: notify
+        template: default.html
+        priority_header: 1
+        subject: |
+          "EC2 Instance(s) comply with tagging requirements
+          {{ account }}:{{ region }}"
+        violation_desc: "EC2 instances have the required tags."
+        action_desc: |
+          EC2 instance(s) are no longer marked to be stopped.
+        to:
+           - "example"
+        transport:
+             type: sqs
+             queue: c7nMessageQueue
 
   - name: ec2-tag-compliance-stop
     resource: ec2
@@ -65,6 +95,21 @@ policies:
         tag: c7n_tag_compliance
         op: terminate
         days: 3
+      - type: notify
+        template: default.html
+        priority_header: 1
+        subject: |
+          "EC2 Instance(s) violate tagging requirements
+          {{ account }}:{{ region }}"
+        violation_desc: "EC2 instances must have the required tags."
+        action_desc: |
+          Offending EC2 instance(s) are now marked to be terminated if the
+          required tags not added within 24 hours.
+        to:
+           - "example"
+        transport:
+             type: sqs
+             queue: c7nMessageQueue
 
   - name: ec2-tag-compliance-terminate
     resource: ec2

@@ -15,6 +15,9 @@ policies:
         - "tag:env": absent
         - "tag:owner": absent
         - "tag:service": absent
+    mode:
+      schedule: "rate(5 minutes)"
+      type: periodic
     actions:
       - type: mark-for-op
         tag: c7n_tag_compliance
@@ -36,6 +39,9 @@ policies:
       - "tag:env": not-null
       - "tag:owner": not-null
       - "tag:service": not-null
+    mode:
+      schedule: "rate(5 minutes)"
+      type: periodic
     actions:
       - type: unmark
         tags: [c7n_tag_compliance]
@@ -59,6 +65,9 @@ policies:
         - "tag:env": absent
         - "tag:owner": absent
         - "tag:service": absent
+    mode:
+      schedule: "rate(5 minutes)"
+      type: periodic
     actions:
       - stop
       - type: mark-for-op
@@ -76,6 +85,9 @@ policies:
       - type: marked-for-op
         tag: c7n_tag_compliance
         op: terminate
+    mode:
+      schedule: "rate(5 minutes)"
+      type: periodic
     actions:
       - type: terminate
         force: true
@@ -91,5 +103,8 @@ policies:
         tag: c7n_tag_compliance
         op: terminate
         skew: 1
+    mode:
+      schedule: "rate(5 minutes)"
+      type: periodic
     actions:
       - stop

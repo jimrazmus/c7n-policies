@@ -18,7 +18,7 @@ You will find the 'custodian' program in your path when the installation is comp
 #> custodian version
 ```
 
-## c7n Policies Repository
+### c7n Policies Repository
 
 Check out a copy of this code repository if you haven't already. All policy documents are managed here.
 

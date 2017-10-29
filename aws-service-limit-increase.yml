@@ -1,0 +1,25 @@
+policies:
+  - name: account-service-limit-increase
+    resource: account
+    comment: |
+      Detect impending service limits and automatically request an increase.
+    filters:
+      - type: service-limit
+    mode:
+      schedule: "rate(1 days)"
+      type: periodic
+    actions:
+      - type: request-limit-increase
+        percent-increase: 25
+      - type: notify
+        template: default.html
+        priority_header: 1
+        subject: |
+          "Service limit hit 80 percent of max. {{ account }}:{{ region }}"
+        action_desc: |
+          Submitted a 25 percent service limit increase request.
+        to:
+           - "example"
+        transport:
+             type: sqs
+             queue: c7nMessageQueue

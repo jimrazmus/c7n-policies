@@ -40,3 +40,15 @@ One or more policies are defined in a yaml file. A policy specifies the followin
 * Actions to take on the filtered set of resources
 
 Policies can be run from your laptop or as AWS Lambdas.
+
+## Deploy Policies as Lambdas
+
+Deploy the lambdas with this command
+
+```
+custodian run \
+-v -m -s ./logs/ -l /YourLogGroup -r all \
+--assume \
+"arn:aws:iam::123123123123:role/c7nLambdaExecutionRole" \
+YourPolicyFile1.yml YourPolicyFile2.yml ...
+```

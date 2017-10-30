@@ -12,9 +12,9 @@ policies:
       schedule: "rate(5 minutes)"
       type: periodic
     actions:
-      - mark-for-op
+      - type: mark-for-op
         tag: c7n_s3_global_grants
-        op: lock
+        op: delete-global-grants
         days: 1
       - type: notify
         template: default.html
@@ -37,18 +37,18 @@ policies:
     filters:
       - "tag:c7n_s3_global_grants": not-null
       - not:
-        -type: global-grants
+        - type: global-grants
     actions:
       - type: unmark
-        tag: [c7n_s3_global_grants]
+        tags: [c7n_s3_global_grants]
       - type: notify
         template: default.html
         priority_header: 1
         subject: |
-          "S3 bucket must be secure {{ account }}:{{ region }}"
+          "S3 bucket must be secured {{ account }}:{{ region }}"
         violation_desc: "S3 bucket has global grants."
         action_desc: |
-          S3 bucket(s) are no longer marked to be locked.
+          S3 bucket(s) are no longer marked to delete global grants.
         to:
            - "example"
         transport:
@@ -63,7 +63,7 @@ policies:
       - type: global-grants
       - type: marked-for-op
         tag: c7n_s3_global_grants
-        op: lock
+        op: delete-global-grants
     mode:
       schedule: "rate(5 minutes)"
       type: periodic

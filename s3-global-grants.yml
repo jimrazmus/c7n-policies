@@ -74,3 +74,16 @@ policies:
           - "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"
       - type: unmark
         tags: [c7n_s3_global_grants]
+      - type: notify
+        template: default.html
+        priority_header: 1
+        subject: |
+          "S3 bucket must be secured {{ account }}:{{ region }}"
+        violation_desc: "S3 bucket has global grants."
+        action_desc: |
+          S3 bucket(s) global grants have been removed.
+        to:
+           - "example"
+        transport:
+             type: sqs
+             queue: c7nMessageQueue

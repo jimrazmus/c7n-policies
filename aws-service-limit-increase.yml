@@ -17,7 +17,7 @@ policies:
         subject: |
           "Service limit hit 80 percent of max. {{ account }}:{{ region }}"
         action_desc: |
-          Submitted a 25 percent service limit increase request.
+          Submitted service limit increase request of 25 percent.
         to:
            - "example"
         transport:

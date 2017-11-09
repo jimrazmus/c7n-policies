@@ -1,0 +1,546 @@
+policies:
+
+# 1.1 Avoid the use of the "root" account
+# Level 1
+# Satified via 3.3
+
+# 1.2:  Ensure multi-factor authentication (MFA) is enabled for all IAM users
+# that have a console password
+# Level 1
+- name: cis-iam-user-needs-mfa
+  resource: iam-user
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.2)"
+  region: us-east-1
+  filters:
+    - type: credential
+      key: password_enabled
+      value: true
+    - type: credential
+      key: mfa_active
+      value: false
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Enable MFA or remove users password."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Password enabled IAM user does not have MFA.
+        CIS Amazon Web Services Foundations v1.1.0 (1.2)
+
+# 1.3	Ensure credentials unused for 90 days or greater are disabled
+# Level 1
+- name: cis-iam-stale-credentials
+  resource: iam-user
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.3)"
+  region: us-east-1
+  filters:
+    - or:
+      - and:
+        - type: credential
+          key: password_enabled
+          value: true
+        - type: credential
+          key: password_last_used
+          value_type: age
+          value: 90
+          op: gt
+      - and:
+        - type: credential
+          key: access_keys.active
+          value: true
+        - type: credential
+          key: access_keys.last_used_date
+          value_type: age
+          value: 90
+          op: gt
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Disable stale credentials."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        IAM user password and/or access keys are older than 90 days.
+        CIS Amazon Web Services Foundations v1.1.0 (1.3)
+
+# 1.4	Ensure access keys are rotated every 90 days or less
+# Level 1
+- name: cis-iam-user-key-rotation
+  resource: iam-user
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.4)"
+  region: us-east-1
+  filters:
+    - type: credential
+      key: access_keys.active
+      value: true
+    - type: credential
+      key: access_keys.last_rotated
+      value_type: age
+      value: 90
+      op: gt
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Rotate users access keys."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        IAM user has access keys older than 90 days.
+        CIS Amazon Web Services Foundations v1.1.0 (1.4)
+
+# 1.5 Ensure IAM password policy requires at least one uppercase letter
+# 1.6 Ensure IAM password policy require at least one lowercase letter
+# 1.7 Ensure IAM password policy require at least one symbol
+# 1.8 Ensure IAM password policy require at least one number
+# 1.9 Ensure IAM password policy requires minimum length of 14 or greater
+# 1.10 Ensure IAM password policy prevents password reuse
+# 1.11 Ensure IAM password policy expires passwords within 90 days or less
+# Level 1
+- name: cis-password-policy
+  resource: account
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.5 through 1.11)"
+  region: us-east-1
+  filters:
+    - or:
+      - type: password-policy
+        key: RequireLowercaseCharacters
+        value: false
+      - type: password-policy
+        key: RequireUppercaseCharacters
+        value: false
+      - type: password-policy
+        key: RequireSymbols
+        value: false
+      - type: password-policy
+        key: RequireNumbers
+        value: false
+      - type: password-policy
+        key: MinimumPasswordLength
+        value: 14
+        op: lt
+      - type: password-policy
+        key: PasswordReusePrevention
+        value: 24
+        op: lt
+      - type: password-policy
+        key: MaxPasswordAge
+        value: 90
+        op: lt
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        Modify account password policy to meet, or exceed, CIS benchmarks.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Account password policy does not meet CIS benchmarks.
+        CIS Amazon Web Services Foundations v1.1.0 (1.5 through 1.11)
+
+# 1.12	Ensure no root account access key exists
+# Level 1
+- name: cis-no-root-access-keys
+  resource: account
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.12)"
+  region: us-east-1
+  filters:
+    - type: credential
+      key: access_keys.active
+      value: true
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Remove access keys from the root user."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Root user must not have access keys.
+        CIS Amazon Web Services Foundations v1.1.0 (1.12)
+
+# 1.13	Ensure MFA is enabled for the "root" account
+# Level 1
+- name: cis-root-must-use-mfa
+  resource: account
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.13)"
+  region: us-east-1
+  filters:
+    - type: credential
+      key: mfa_active
+      value: false
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Enable MFA for the account root user."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Account root user does not have MFA enabled.
+        CIS Amazon Web Services Foundations v1.1.0 (1.13)
+
+# 1.14	Ensure hardware MFA is enabled for the "root" account
+# Level 2
+# Not implemented
+
+# 1.15 Ensure security questions are registered in the AWS account
+# Level 1 - Not Scored
+# Not implemented
+
+# 1.16	Ensure IAM policies are attached only to groups or roles
+# Level 1
+- name: cis-iam-users-with-policies
+  resource: iam-user
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.16)"
+  region: us-east-1
+  filters:
+    - type: policy
+      key: 'PolicyName'
+      value: present
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        Detach the policy from the IAM user. Attach the policy to a group or
+        role that is associated with the user.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        IAM user has policies directly attached.
+        CIS Amazon Web Services Foundations v1.1.0 (1.16)
+
+# 1.17 Enable detailed billing
+# Level 1
+# Not implemented
+
+# 1.18 Ensure IAM Master and IAM Manager roles are active
+# Level 1
+# TBD
+
+
+# 1.19 Maintain current contact details
+# Level 1
+# Not implemented
+
+# 1.20 Ensure security contact information is registered
+# Level 1
+# Not implemented
+
+# 1.21	Ensure IAM instance roles are used for AWS resource access from
+# instances
+# Level 2 - Not Scored
+# TBD
+
+
+# 1.22 Ensure a support role has been created to manage incidents with AWS
+# support
+# Level 1
+# TBD
+
+
+# 1.23 Do not setup access keys during initial user setup for all IAM users
+# that have a console password
+# Level 1 - Not Scored
+- name: cis-iam-user-with-unused-access-keys
+  resource: iam-user
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.23)"
+  region: us-east-1
+  filters:
+    - type: credential
+      key: password_enabled
+      value: true
+    - type: credential
+      key: access_keys.active
+      value: true
+    - type: credential
+      key: access_keys.last_used_date
+      value: absent
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Remove or deactivate users access keys."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        IAM user has unused access keys, possibly from initial user setup,
+        and a console password.
+        CIS Amazon Web Services Foundations v1.1.0 (1.23)
+
+# 1.24  Ensure IAM policies that allow full "*:*" administrative privileges
+# are not created
+# Level 1
+- name: cis-iam-no-used-all-all-policy
+  resource: iam-policy
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.24)"
+  region: us-east-1
+  filters:
+    - type: used
+    - type: has-allow-all
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        Detach the policy or restict the policy to least privileges required.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        IAM policy allows full '*.*' admistrative privileges.
+        CIS Amazon Web Services Foundations v1.1.0 (1.24)
+
+# 2.1 Ensure CloudTrail is enabled in all regions (Level 1)
+# 2.2	Ensure CloudTrail log file validation is enabled (Level 2)
+# 2.4	Ensure CloudTrail trails are integrated with CloudWatch Logs (Level 1)
+# 2.7	Ensure CloudTrail logs are encrypted at rest using KMS CMKs (Level 2)
+- name: cis-cloudtrail-is-secure-and-running
+  resource: account
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (2.1,2.2,2.4,2.7)"
+  filters:
+    - type: check-cloudtrail
+      cloudwatch-logging: true
+      current-region: true
+      file-digest: true
+      global-events: true
+      kms: true
+      running: true
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Configure CloudTrail to meet CIS benchmarks."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        CloudTrail is not enabled or properly secured.
+        CIS Amazon Web Services Foundations v1.1.0 (2.1,2.2,2.4,2.7)
+
+# 2.3	Ensure the S3 bucket CloudTrail logs to is not publicly accessible
+# Level 1
+# TBD
+
+
+# 2.5	Ensure AWS Config is enabled in all regions
+# Level 1
+- name: cis-check-config-is-enabled
+  resource: account
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (2.5)"
+  filters:
+    - type: check-config
+      all-resources: true
+      global-resources: true
+      running: true
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Enable AWS Config Service to meet benchmarks."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        AWS Config Service must be enabled in all regions.
+        CIS Amazon Web Services Foundations v1.1.0 (2.5)
+
+# 2.6	Ensure S3 bucket access logging is enabled on the CloudTrail S3 bucket
+# Level 1
+# TBD
+
+
+# 2.8	Ensure rotation for customer created CMKs is enabled
+# Level 2
+- name: cis-kms-key-rotation-is-enabled
+  resource: kms-key
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (2.5)"
+  filters:
+    - type: key-rotation-status
+      key: KeyRotationEnabled
+      value: false
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Enable annual key rotation."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        AWS KMS keys do not have annual key rotation enabled.
+        CIS Amazon Web Services Foundations v1.1.0 (2.8)
+
+# 3.1 Ensure a log metric filter and alarm exist for unauthorized API calls
+# Level 1
+
+# 3.2 Ensure a log metric filter and alarm exist for Management Console
+# sign-in without MFA
+# Level 1
+
+# 3.3 Ensure a log metric filter and alarm exist for usage of "root" account
+# Level 1
+#resource: alarm
+
+# 3.4 Ensure a log metric filter and alarm exist for IAM policy changes
+# Level 1
+
+# 3.5 Ensure a log metric filter and alarm exist for CloudTrail configuration
+# changes
+# Level 1
+
+# 3.6 Ensure a log metric filter and alarm exist for AWS Management Console
+# authentication failures
+# Level 2
+
+# 3.7 Ensure a log metric filter and alarm exist for disabling or scheduled
+# deletion of customer created CMKs
+# Level 2
+
+# 3.8 Ensure a log metric filter and alarm exist for S3 bucket policy changes
+# Level 1
+
+# 3.9 Ensure a log metric filter and alarm exist for AWS Config configuration
+# changes
+# Level 2
+
+# 3.10 Ensure a log metric filter and alarm exist for security group changes
+# Level 2
+
+# 3.11 Ensure a log metric filter and alarm exist for changes to Network
+# Access Control Lists (NACL)
+# Level 2
+
+# 3.12 Ensure a log metric filter and alarm exist for changes to network
+# gateways
+# Level 1
+
+# 3.13 Ensure a log metric filter and alarm exist for route table changes
+# Level 1
+
+# 3.14 Ensure a log metric filter and alarm exist for VPC changes
+# Level 1
+
+# 3.15 Ensure appropriate subscribers to each SNS topic
+# Level 1 - Not Scored
+# Not implemented
+
+# 4.1 Ensure no security groups allow ingress from 0.0.0.0/0 to port 22
+# 4.2 Ensure no security groups allow ingress from 0.0.0.0/0 to port 3389
+# Level 1
+- name: cis-security-group-ingress-is-restricted
+  resource: security-group
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (4.1,4.2)"
+  filters:
+    - type: ingress
+      Ports: [22,3389]
+    - type: ingress
+      IpRanges:
+        - CidrIp: '0.0.0.0/0'
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Restrict ingress to ports 22 and 3389."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        AWS security group allows unrestricted access to ports 22 and/or 3389.
+        CIS Amazon Web Services Foundations v1.1.0 (4.1,4.2)
+
+# 4.3 Ensure VPC flow logging is enabled in all VPCs
+# Level 2
+- name: cis-vpc-flow-log-enabled
+  resource: vpc
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (4.3)"
+  filters:
+    - not:
+      - type: flow-logs
+        enabled: true
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: "Enable VPC flow logging."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        VPC flow logging is not enabled for all VPCs.
+        CIS Amazon Web Services Foundations v1.1.0 (4.3)
+
+
+# 4.4 Ensure the default security group of every VPC restricts all traffic
+# Level 2
+- name: cis-security-group-default-deny
+  resource: security-group
+  filters:
+    - type: value
+      key: "GroupName"
+      value: "default"
+    - or:
+      - type: value
+        key: IpPermissions
+        value: not-null
+      - type: value
+        key: IpPermissionsEgress
+        value: not-null
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        "Remove all ingress and egress rules from the default security group."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        The default security group must deny all traffic.
+        CIS Amazon Web Services Foundations v1.1.0 (4.4)
+
+# 4.5 Ensure routing tables for VPC peering are "least access"
+# Level 2 - Not Scored

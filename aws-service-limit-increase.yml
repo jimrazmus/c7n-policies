@@ -17,6 +17,6 @@ policies:
       to: ["slack"]
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/592361377849/c7nMessageQueue
+        queue: c7nMessageQueue
         region: us-east-1
       violation_desc: "Service limit hit 80 percent of max."

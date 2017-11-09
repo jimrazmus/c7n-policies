@@ -1,155 +1,137 @@
 policies:
 
-  - name: ec2-tag-compliance-mark
-    resource: ec2
-    comment: |
-      Find all (non-ASG) instances that are not conformant
-      to tagging policies, tag them for stoppage in 1 day
-      and send a notification.
-    filters:
-      - "tag:aws:autoscaling:groupName": absent
-      - "tag:c7n_tag_compliance": absent
-      - or:
-        - "tag:data_class": absent
-        - "tag:department": absent
-        - "tag:division": absent
-        - "tag:env": absent
-        - "tag:owner": absent
-        - "tag:service": absent
-    mode:
-      schedule: "rate(5 minutes)"
-      type: periodic
-    actions:
-      - type: mark-for-op
-        tag: c7n_tag_compliance
-        op: stop
-        days: 1
-      - type: notify
-        template: default.html
-        priority_header: 1
-        subject: |
-          "EC2 Instance(s) violate tagging requirements
-          {{ account }}:{{ region }}"
-        violation_desc: "EC2 instances must have the required tags."
-        action_desc: |
-          Offending EC2 instance(s) are now marked to be stopped if the
-          required tags not added within 24 hours.
-        to:
-           - "example"
-        transport:
-             type: sqs
-             queue: c7nMessageQueue
+- name: ec2-tag-compliance-mark
+  resource: ec2
+  comment: |
+    Find all (non-ASG) instances that are not conformant
+    to tagging policies, tag them for stoppage in 1 day
+    and send a notification.
+  filters:
+    - "tag:aws:autoscaling:groupName": absent
+    - "tag:c7n_tag_compliance": absent
+    - or:
+      - "tag:data_class": absent
+      - "tag:department": absent
+      - "tag:division": absent
+      - "tag:env": absent
+      - "tag:owner": absent
+      - "tag:service": absent
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: mark-for-op
+      tag: c7n_tag_compliance
+      op: stop
+      days: 1
+    - type: notify
+      action_desc: |
+        Offending EC2 instance(s) are now marked to be stopped if the
+        required tags not added within 24 hours.
+      to: ["slack"]
+      transport:
+           type: sqs
+           queue: c7nMessageQueue
+      violation_desc: "EC2 instances must have the required tags."
 
-  - name: ec2-tag-compliance-unmark
-    resource: ec2
-    comment: |
-      Any instances which have previously been marked as
-      non compliant with tag policies, that are now compliant
-      should be unmarked as non-compliant.
-    filters:
-      - "tag:aws:autoscaling:groupName": absent
-      - "tag:c7n_tag_compliance": not-null
-      - "tag:data_class": not-null
-      - "tag:department": not-null
-      - "tag:division": not-null
-      - "tag:env": not-null
-      - "tag:owner": not-null
-      - "tag:service": not-null
-    mode:
-      schedule: "rate(5 minutes)"
-      type: periodic
-    actions:
-      - type: unmark
-        tags: [c7n_tag_compliance]
-      - type: notify
-        template: default.html
-        priority_header: 1
-        subject: |
-          "EC2 Instance(s) comply with tagging requirements
-          {{ account }}:{{ region }}"
-        violation_desc: "EC2 instances have the required tags."
-        action_desc: |
-          EC2 instance(s) are no longer marked to be stopped.
-        to:
-           - "example"
-        transport:
-             type: sqs
-             queue: c7nMessageQueue
+- name: ec2-tag-compliance-unmark
+  resource: ec2
+  comment: |
+    Any instances which have previously been marked as
+    non compliant with tag policies, that are now compliant
+    should be unmarked as non-compliant.
+  filters:
+    - "tag:aws:autoscaling:groupName": absent
+    - "tag:c7n_tag_compliance": not-null
+    - "tag:data_class": not-null
+    - "tag:department": not-null
+    - "tag:division": not-null
+    - "tag:env": not-null
+    - "tag:owner": not-null
+    - "tag:service": not-null
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: unmark
+      tags: [c7n_tag_compliance]
+    - type: notify
+      action_desc: |
+        EC2 instance(s) are no longer marked to be stopped.
+      to: ["slack"]
+      transport:
+           type: sqs
+           queue: c7nMessageQueue
+      violation_desc: "EC2 instances have the required tags."
 
-  - name: ec2-tag-compliance-stop
-    resource: ec2
-    comment: |
-      Stop all non autoscaling group instances previously marked
-      for stoppage by today's date, and schedule termination in
-      2 days. Also verify that they continue to not meet tagging
-      policies.
-    filters:
-      - "tag:aws:autoscaling:groupName": absent
-      - type: marked-for-op
-        tag: c7n_tag_compliance
-        op: stop
-      - or:
-        - "tag:data_class": absent
-        - "tag:department": absent
-        - "tag:division": absent
-        - "tag:env": absent
-        - "tag:owner": absent
-        - "tag:service": absent
-    mode:
-      schedule: "rate(5 minutes)"
-      type: periodic
-    actions:
-      - stop
-      - type: mark-for-op
-        tag: c7n_tag_compliance
-        op: terminate
-        days: 3
-      - type: notify
-        template: default.html
-        priority_header: 1
-        subject: |
-          "EC2 Instance(s) violate tagging requirements
-          {{ account }}:{{ region }}"
-        violation_desc: "EC2 instances must have the required tags."
-        action_desc: |
-          Offending EC2 instance(s) are now marked to be terminated if the
-          required tags not added within 24 hours.
-        to:
-           - "example"
-        transport:
-             type: sqs
-             queue: c7nMessageQueue
+- name: ec2-tag-compliance-stop
+  resource: ec2
+  comment: |
+    Stop all non autoscaling group instances previously marked
+    for stoppage by today's date, and schedule termination in
+    2 days. Also verify that they continue to not meet tagging
+    policies.
+  filters:
+    - "tag:aws:autoscaling:groupName": absent
+    - type: marked-for-op
+      tag: c7n_tag_compliance
+      op: stop
+    - or:
+      - "tag:data_class": absent
+      - "tag:department": absent
+      - "tag:division": absent
+      - "tag:env": absent
+      - "tag:owner": absent
+      - "tag:service": absent
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - stop
+    - type: mark-for-op
+      tag: c7n_tag_compliance
+      op: terminate
+      days: 3
+    - type: notify
+      action_desc: |
+        Offending EC2 instance(s) are now marked to be terminated if the
+        required tags not added within 24 hours.
+      to: ["slack"]
+      transport:
+           type: sqs
+           queue: c7nMessageQueue
+      violation_desc: "EC2 instances must have the required tags."
 
-  - name: ec2-tag-compliance-terminate
-    resource: ec2
-    comment: |
-      Terminate all stopped instances marked for termination
-      by today's date.
-    filters:
-      - "tag:aws:autoscaling:groupName": absent
-      - type: marked-for-op
-        tag: c7n_tag_compliance
-        op: terminate
-    mode:
-      schedule: "rate(5 minutes)"
-      type: periodic
-    actions:
-      - type: terminate
-        force: true
+- name: ec2-tag-compliance-terminate
+  resource: ec2
+  comment: |
+    Terminate all stopped instances marked for termination
+    by today's date.
+  filters:
+    - "tag:aws:autoscaling:groupName": absent
+    - type: marked-for-op
+      tag: c7n_tag_compliance
+      op: terminate
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: terminate
+      force: true
 
-  - name: ec2-tag-compliance-nag-stop
-    resource: ec2
-    comment: |
-      Stop all instances marked for termination every hour
-      starting 1 day before their termination.
-    filters:
-      - "tag:aws:autoscaling:groupName": absent
-      - type: marked-for-op
-        tag: c7n_tag_compliance
-        op: terminate
-        skew: 1
-    mode:
-      schedule: "rate(5 minutes)"
-      type: periodic
-    actions:
-      - stop
+- name: ec2-tag-compliance-nag-stop
+  resource: ec2
+  comment: |
+    Stop all instances marked for termination every hour
+    starting 1 day before their termination.
+  filters:
+    - "tag:aws:autoscaling:groupName": absent
+    - type: marked-for-op
+      tag: c7n_tag_compliance
+      op: terminate
+      skew: 1
+  mode:
+    schedule: "rate(60 minutes)"
+    type: periodic
+  actions:
+    - stop

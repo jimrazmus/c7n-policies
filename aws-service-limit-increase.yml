@@ -18,5 +18,4 @@ policies:
       transport:
         type: sqs
         queue: c7nMessageQueue
-        region: us-east-1
       violation_desc: "Service limit hit 80 percent of max."

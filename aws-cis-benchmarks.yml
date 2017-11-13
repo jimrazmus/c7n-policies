@@ -242,8 +242,7 @@ policies:
 
 # 1.18 Ensure IAM Master and IAM Manager roles are active
 # Level 1
-# TBD
-
+# Not implemented
 
 # 1.19 Maintain current contact details
 # Level 1
@@ -262,8 +261,30 @@ policies:
 # 1.22 Ensure a support role has been created to manage incidents with AWS
 # support
 # Level 1
-# TBD
-
+- name: iam-policy-for-support-is-used
+  resource: iam-policy
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.22)"
+  region: us-east-1
+  filters:
+  - type: unused
+  - type: value
+    key: 'PolicyName'
+    value: AWSSupportAccess
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        Attach the AWSSupportAccess policy to a support group or role to
+        manage incidents with AWS support.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        IAM policy AWSSupportAccess is not used.
+        CIS Amazon Web Services Foundations v1.1.0 (1.22)
 
 # 1.23 Do not setup access keys during initial user setup for all IAM users
 # that have a console password

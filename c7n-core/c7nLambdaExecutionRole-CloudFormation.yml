@@ -18,3 +18,31 @@
               Action: "sts:AssumeRole"
         ManagedPolicyArns:
           - arn:aws:iam::aws:policy/PowerUserAccess
+        Policies:
+          -
+            PolicyName: c7nLambdaExecutionPolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                -
+                  Effect: Allow
+                  Resource: "*"
+                  Action:
+                    - "iam:DeleteAccessKey"
+                    - "iam:GenerateCredentialReport"
+                    - "iam:GetAccountSummary"
+                    - "iam:GetAccountPasswordPolicy"
+                    - "iam:GetCredentialReport"
+                    - "iam:GetGroup"
+                    - "iam:ListAccountAliases"
+                    - "iam:ListAccessKeys"
+                    - "iam:ListAttachedUserPolicies"
+                    - "iam:ListAttachedRolePolicies"
+                    - "iam:ListPolicyVersions"
+                    - "iam:ListGroupPolicies"
+                    - "iam:ListGroupsForUser"
+                    - "iam:ListMfaDevices"
+                    - "iam:ListPolicies"
+                    - "iam:ListRolePolicies"
+                    - "iam:ListVirtualMFADevices"
+                    - "iam:UpdateAccessKey"

@@ -9,7 +9,7 @@ policies:
       key: retentionInDays
       value: absent
   mode:
-    schedule: "rate(1 days)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: retention

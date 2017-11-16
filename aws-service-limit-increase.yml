@@ -1,25 +1,22 @@
 policies:
-  - name: account-service-limit-increase
-    resource: account
-    comment: |
-      Detect impending service limits and automatically request an increase.
-    filters:
-      - type: service-limit
-    mode:
-      schedule: "rate(1 days)"
-      type: periodic
-    actions:
-      - type: request-limit-increase
-        percent-increase: 25
-      - type: notify
-        template: default.html
-        priority_header: 1
-        subject: |
-          "Service limit hit 80 percent of max. {{ account }}:{{ region }}"
-        action_desc: |
-          Submitted service limit increase request of 25 percent.
-        to:
-           - "example"
-        transport:
-             type: sqs
-             queue: c7nMessageQueue
+
+- name: account-service-limit-increase
+  resource: account
+  comment: |
+    Detect impending service limits and automatically request an increase.
+  filters:
+    - type: service-limit
+  mode:
+    schedule: "rate(24 hours)"
+    type: periodic
+  actions:
+    - type: request-limit-increase
+      percent-increase: 25
+    - type: notify
+      action_desc: |
+        Custodian submitted a 25% service limit increase request.
+      to: ["slack"]
+      transport:
+           type: sqs
+           queue: c7nMessageQueue
+      violation_desc: "Service limit hit 80 percent of max."

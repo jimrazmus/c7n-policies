@@ -255,8 +255,27 @@ policies:
 # 1.21	Ensure IAM instance roles are used for AWS resource access from
 # instances
 # Level 2 - Not Scored
-# TBD
-
+- name: ec2-iam-instance-role-is-present
+  resource: ec2
+  comment: "CIS Amazon Web Services Foundations v1.1.0 (1.21)"
+  filters:
+    - type: value
+      key: IamInstanceProfile
+      value: absent
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        Assure instance role is used for AWS resource access.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        IAM instance role is absent.
+        CIS Amazon Web Services Foundations v1.1.0 (1.21)
 
 # 1.22 Ensure a support role has been created to manage incidents with AWS
 # support
@@ -532,7 +551,6 @@ policies:
       violation_desc: |
         VPC flow logging is not enabled for all VPCs.
         CIS Amazon Web Services Foundations v1.1.0 (4.3)
-
 
 # 4.4 Ensure the default security group of every VPC restricts all traffic
 # Level 2

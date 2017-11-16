@@ -490,11 +490,12 @@ policies:
   resource: security-group
   comment: "CIS Amazon Web Services Foundations v1.1.0 (4.1,4.2)"
   filters:
-    - type: ingress
-      Ports: [22,3389]
-    - type: ingress
-      IpRanges:
-        - CidrIp: '0.0.0.0/0'
+  - type: ingress
+    Ports: [22,3389]
+    Cidr:
+      value: 0.0.0.0/0
+      op: eq
+      value_type: cidr
   mode:
     schedule: "rate(15 minutes)"
     type: periodic

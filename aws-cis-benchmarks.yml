@@ -371,12 +371,14 @@ policies:
   comment: "CIS Amazon Web Services Foundations v1.1.0 (2.1,2.2,2.4,2.7)"
   filters:
     - type: check-cloudtrail
-      cloudwatch-logging: true
       current-region: true
       file-digest: true
       global-events: true
       kms: true
       running: true
+    - type: value
+      key: CloudWatchLogsLogGroupArn
+      value: present
   mode:
     schedule: "rate(15 minutes)"
     type: periodic

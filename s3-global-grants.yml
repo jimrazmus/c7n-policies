@@ -25,7 +25,7 @@ policies:
         action_desc: |
           Offending S3 bucket marked for global grant removal in 1 day.
         to:
-           - "example"
+           - "slack"
         transport:
              type: sqs
              queue: c7nMessageQueue
@@ -50,7 +50,7 @@ policies:
         action_desc: |
           S3 bucket(s) are no longer marked to delete global grants.
         to:
-           - "example"
+           - "slack"
         transport:
              type: sqs
              queue: c7nMessageQueue
@@ -83,7 +83,7 @@ policies:
         action_desc: |
           S3 bucket(s) global grants have been removed.
         to:
-           - "example"
+           - "slack"
         transport:
              type: sqs
              queue: c7nMessageQueue

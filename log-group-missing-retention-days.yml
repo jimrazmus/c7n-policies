@@ -1,0 +1,23 @@
+policies:
+- name: log-group-missing-retention-days
+  resource: log-group
+  comment: |
+    Detect CloudWatch Log Groups with no retention setting and set it to
+    one day.
+  filters:
+    - type: value
+      key: retentionInDays
+      value: absent
+  mode:
+    schedule: "rate(24 hours)"
+    type: periodic
+  actions:
+    - type: retention
+      days: 1
+    - type: notify
+      action_desc: "Custodian has set the retention period to 1 day."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: "CloudWatch Log Group has no retention setting."

@@ -1,2 +1,2 @@
-boto3
+# boto3 is provided via aws automagically
 requests

@@ -255,7 +255,7 @@ policies:
 # 1.21	Ensure IAM instance roles are used for AWS resource access from
 # instances
 # Level 2 - Not Scored
-- name: ec2-iam-instance-role-is-present
+- name: cis-ec2-iam-instance-role-is-present
   resource: ec2
   comment: "CIS Amazon Web Services Foundations v1.1.0 (1.21)"
   filters:
@@ -280,7 +280,7 @@ policies:
 # 1.22 Ensure a support role has been created to manage incidents with AWS
 # support
 # Level 1
-- name: iam-policy-for-support-is-used
+- name: cis-iam-policy-for-support-is-used
   resource: iam-policy
   comment: "CIS Amazon Web Services Foundations v1.1.0 (1.22)"
   region: us-east-1

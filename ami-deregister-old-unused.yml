@@ -1,0 +1,65 @@
+policies:
+
+- name: ami-deregister-old-unused-mark
+  resource: ami
+  filters:
+    - "tag:c7n_ami_deregister_old_unused": absent
+    - type: unused
+      value: true
+    - type: image-age
+      days: 30
+  actions:
+    - type: mark-for-op
+      days: 5
+      op: deregister
+      tag: c7n_ami_deregister_old_unused
+    - type: notify
+      action_desc: |
+        Custodian has marked the AMIs for automatic deregistration in 5 days.
+        Please review AMI usage.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: "Custodian detected unused AMI(s) that are 30+ days old."
+
+- name: ami-deregister-old-unused-unmark
+  resource: ami
+  filters:
+    - "tag:c7n_ami_deregister_old_unused": present
+    - type: unused
+      value: false
+  actions:
+    - type: unmark
+      tags: [c7n_ami_deregister_old_unused]
+    - type: notify
+      action_desc: |
+        No action required. Custodian unmarked the AMIs to
+        prevent deregistration.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        AMIs previously marked for deregistration are now in use.
+
+- name: ami-deregister-old-unused
+  resource: ami
+  filters:
+    - "tag:c7n_ami_deregister_old_unused": present
+    - type: unused
+      value: true
+    - type: marked-for-op
+      op: deregister
+      tag: c7n_ami_deregister_old_unused
+  actions:
+    - deregister
+    - type: notify
+      action_desc: |
+        No action required. Custodian completed the AMI deregistration.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Old, unused AMIs have been deregistered.

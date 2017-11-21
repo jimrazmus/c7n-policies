@@ -8,6 +8,9 @@ policies:
       value: true
     - type: image-age
       days: 30
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
   actions:
     - type: mark-for-op
       days: 5
@@ -29,6 +32,9 @@ policies:
     - "tag:c7n_ami_deregister_old_unused": present
     - type: unused
       value: false
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
   actions:
     - type: unmark
       tags: [c7n_ami_deregister_old_unused]
@@ -52,6 +58,9 @@ policies:
     - type: marked-for-op
       op: deregister
       tag: c7n_ami_deregister_old_unused
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
   actions:
     - deregister
     - type: notify

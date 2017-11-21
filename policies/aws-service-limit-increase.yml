@@ -7,7 +7,7 @@ policies:
   filters:
     - type: service-limit
   mode:
-    schedule: "rate(1 days)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: request-limit-increase

@@ -1,0 +1,67 @@
+policies:
+
+- name: ebs-volume-delete-unattached-mark
+  comment: "Mark unattached, EBS volumes for deletion."
+  resource: ebs
+  filters:
+    - "tag:c7n_ebs_volume_delete_unattached": absent
+    - Attachments: []
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: mark-for-op
+      tag: c7n_ebs_volume_delete_unattached
+      op: delete
+      days: 14
+    - type: notify
+      action_desc: |
+        Custodian has marked the volumes for deletion in 14 days. Please backup
+        the volume and/or attach it.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Custodian detected unattached EBS volume(s).
+
+- name: ebs-volume-delete-unattached-unmark
+  comments: |
+    Unmark attached, EBS volumes that were previously marked for deletion.
+  resource: ebs
+  filters:
+    - "tag:c7n_ebs_volume_delete_unattached": not-null
+    - type: value
+      key: "Attachments[0].Device"
+      value: not-null
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - type: unmark
+      tags: [c7n_ebs_volume_delete_unattached]
+
+- name: ebs-volume-delete-unattached
+  comments: |
+    Delete unattached, EBS volumes that were marked for deletion.
+  resource: ebs
+  filters:
+    - type: marked-for-op
+      tag: c7n_ebs_volume_delete_unattached
+      op: delete
+    - Attachments: []
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - delete
+    - type: notify
+      action_desc: |
+        Custodian has deleted unattached, EBS volumes that were maked for
+        deletion. No action is required.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Custodian detected unattached EBS volume(s).

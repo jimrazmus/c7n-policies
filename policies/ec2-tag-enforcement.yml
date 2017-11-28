@@ -30,8 +30,8 @@ policies:
         required tags not added within 24 hours.
       to: ["slack"]
       transport:
-           type: sqs
-           queue: c7nMessageQueue
+        type: sqs
+        queue: c7nMessageQueue
       violation_desc: "EC2 instances must have the required tags."
 
 - name: ec2-tag-compliance-unmark
@@ -60,8 +60,8 @@ policies:
         EC2 instance(s) are no longer marked to be stopped.
       to: ["slack"]
       transport:
-           type: sqs
-           queue: c7nMessageQueue
+        type: sqs
+        queue: c7nMessageQueue
       violation_desc: "EC2 instances have the required tags."
 
 - name: ec2-tag-compliance-stop
@@ -98,8 +98,8 @@ policies:
         required tags not added within 24 hours.
       to: ["slack"]
       transport:
-           type: sqs
-           queue: c7nMessageQueue
+        type: sqs
+        queue: c7nMessageQueue
       violation_desc: "EC2 instances must have the required tags."
 
 - name: ec2-tag-compliance-terminate

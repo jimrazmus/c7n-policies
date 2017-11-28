@@ -1,0 +1,24 @@
+policies:
+
+- name: ebs-volume-missing-recent-snapshot
+  resource: ebs
+  comment: |
+    Warn about volumes missing a recent snapshot and create one.
+  filters:
+    - type: fault-tolerant
+      tolerant: False
+  mode:
+    schedule: "rate(15 minutes)"
+    type: periodic
+  actions:
+    - snapshot
+    - type: notify
+      action_desc: |
+        Custodian has created a snapshot. Please review volume backup and
+        recovery requirements.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Custodian detected EBS volume(s) w/o a snapshot in the last 7 days.

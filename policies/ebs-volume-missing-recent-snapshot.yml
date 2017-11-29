@@ -8,7 +8,7 @@ policies:
     - type: fault-tolerant
       tolerant: False
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(60 minutes)"
     type: periodic
   actions:
     - snapshot

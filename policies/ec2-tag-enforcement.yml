@@ -17,7 +17,7 @@ policies:
       - "tag:owner": absent
       - "tag:service": absent
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(60 minutes)"
     type: periodic
   actions:
     - type: mark-for-op
@@ -50,7 +50,7 @@ policies:
     - "tag:owner": not-null
     - "tag:service": not-null
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(30 minutes)"
     type: periodic
   actions:
     - type: unmark
@@ -84,7 +84,7 @@ policies:
       - "tag:owner": absent
       - "tag:service": absent
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(60 minutes)"
     type: periodic
   actions:
     - stop
@@ -113,7 +113,7 @@ policies:
       tag: c7n_tag_compliance
       op: terminate
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(6 hours)"
     type: periodic
   actions:
     - type: terminate

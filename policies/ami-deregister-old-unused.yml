@@ -9,7 +9,7 @@ policies:
     - type: image-age
       days: 30
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(60 minutes)"
     type: periodic
   actions:
     - type: mark-for-op
@@ -33,7 +33,7 @@ policies:
     - type: unused
       value: false
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(30 minutes)"
     type: periodic
   actions:
     - type: unmark
@@ -59,7 +59,7 @@ policies:
       op: deregister
       tag: c7n_ami_deregister_old_unused
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(6 hours)"
     type: periodic
   actions:
     - deregister

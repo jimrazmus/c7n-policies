@@ -67,10 +67,9 @@ policies:
 - name: ec2-tag-compliance-stop
   resource: ec2
   comment: |
-    Stop all non autoscaling group instances previously marked
-    for stoppage by today's date, and schedule termination in
-    2 days. Also verify that they continue to not meet tagging
-    policies.
+    Stop all non autoscaling group instances previously marked for stoppage by
+    today's date, and schedule termination. Also verify that they continue to
+    not meet tagging policies.
   filters:
     - "tag:aws:autoscaling:groupName": absent
     - type: marked-for-op

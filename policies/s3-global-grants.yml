@@ -9,7 +9,7 @@ policies:
     - "tag:c7n_s3_global_grants": absent
     - type: global-grants
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: mark-for-op
@@ -35,7 +35,7 @@ policies:
     - not:
       - type: global-grants
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: unmark
@@ -60,7 +60,7 @@ policies:
       tag: c7n_s3_global_grants
       op: delete-global-grants
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: delete-global-grants

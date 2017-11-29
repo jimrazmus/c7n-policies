@@ -1,0 +1,35 @@
+policies:
+
+- name: security-group-default-deny
+  comment: "Remove all rules from default security groups"
+  resource: security-group
+  filters:
+    - type: value
+      key: "GroupName"
+      value: "default"
+    - or:
+      - type: value
+        key: IpPermissions
+        value: not-null
+      - type: value
+        key: IpPermissionsEgress
+        value: not-null
+  mode:
+    schedule: "rate(24 hours)"
+    type: periodic
+  actions:
+    - type: remove-permissions
+      ingress: all
+    - type: remove-permissions
+      egress: all
+    - type: notify
+      action_desc: |
+        Custodian removed all rules, ingress and egress, from the default
+        security group. No further action is required.
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        The default security group must deny all traffic.
+        CIS Amazon Web Services Foundations v1.1.0 (4.4)

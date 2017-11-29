@@ -19,7 +19,7 @@ policies:
       key: mfa_active
       value: false
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -59,7 +59,7 @@ policies:
           value: 90
           op: gt
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -88,7 +88,7 @@ policies:
       value: 90
       op: gt
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -140,7 +140,7 @@ policies:
         value: 90
         op: lt
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -165,7 +165,7 @@ policies:
       key: access_keys.active
       value: true
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -189,7 +189,7 @@ policies:
       key: mfa_active
       value: false
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -221,7 +221,7 @@ policies:
       key: 'PolicyName'
       value: present
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -263,7 +263,7 @@ policies:
       key: IamInstanceProfile
       value: absent
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -290,7 +290,7 @@ policies:
     key: 'PolicyName'
     value: AWSSupportAccess
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -323,7 +323,7 @@ policies:
       key: access_keys.last_used_date
       value: absent
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -348,7 +348,7 @@ policies:
     - type: used
     - type: has-allow-all
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -380,7 +380,7 @@ policies:
       key: CloudWatchLogsLogGroupArn
       value: present
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -409,7 +409,7 @@ policies:
       global-resources: true
       running: true
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -437,7 +437,7 @@ policies:
       key: KeyRotationEnabled
       value: false
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -518,7 +518,7 @@ policies:
       op: eq
       value_type: cidr
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -541,7 +541,7 @@ policies:
       - type: flow-logs
         enabled: true
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify
@@ -570,7 +570,7 @@ policies:
         key: IpPermissionsEgress
         value: not-null
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify

@@ -18,7 +18,7 @@ policies:
       - "tag:owner": absent
       - "tag:service": absent
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(60 minutes)"
     type: periodic
   actions:
     - type: copy-instance-tags
@@ -29,7 +29,7 @@ policies:
         - env
         - owner
         - service
-    - type: mark
+    - type: tag
       key: c7n_tag_compliance
       value: 'non-conformant'
 
@@ -46,7 +46,7 @@ policies:
     - "tag:owner": not-null
     - "tag:service": not-null
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(30 minutes)"
     type: periodic
   actions:
     - type: unmark
@@ -67,7 +67,7 @@ policies:
       - "tag:owner": absent
       - "tag:service": absent
   mode:
-    schedule: "rate(15 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: notify

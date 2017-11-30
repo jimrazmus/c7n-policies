@@ -43,7 +43,7 @@ policies:
       action_desc: |
         No action required. Custodian unmarked the AMIs to
         prevent deregistration.
-      cc: 'good'
+      cc: ["good"]
       subject: "AMI Deregistration"
       to: ["slack"]
       transport:
@@ -69,7 +69,7 @@ policies:
     - type: notify
       action_desc: |
         No action required. Custodian completed the AMI deregistration.
-      cc: '#000000'
+      cc: ["#000000"]
       subject: "AMI Deregistration"
       to: ["slack"]
       transport:

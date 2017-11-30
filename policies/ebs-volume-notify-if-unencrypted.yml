@@ -1,0 +1,25 @@
+policies:
+
+- name: ebs-volume-notify-if-unencrypted
+  comment: "Notify of non-root, unencrypted, EBS volumes."
+  resource: ebs
+  filters:
+    - Encrypted: false
+    - not:
+      - type: value
+        key: "Attachments[].Device"
+        op: regex
+        value: ^/dev/(sda1|xvda)$
+  mode:
+    type: cloudtrail
+    events:
+      - CreateVolume
+  actions:
+    - type: notify
+      action_desc: "Please encrypt the volume."
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        Custodian detected the creation of an unencrypted volume.

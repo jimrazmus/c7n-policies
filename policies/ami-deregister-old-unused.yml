@@ -20,6 +20,7 @@ policies:
       action_desc: |
         Custodian has marked the AMIs for automatic deregistration in 5 days.
         Please review AMI usage.
+      subject: "AMI Deregistration"
       to: ["slack"]
       transport:
         type: sqs
@@ -42,6 +43,8 @@ policies:
       action_desc: |
         No action required. Custodian unmarked the AMIs to
         prevent deregistration.
+      cc: 'good'
+      subject: "AMI Deregistration"
       to: ["slack"]
       transport:
         type: sqs
@@ -66,6 +69,8 @@ policies:
     - type: notify
       action_desc: |
         No action required. Custodian completed the AMI deregistration.
+      cc: '#000000'
+      subject: "AMI Deregistration"
       to: ["slack"]
       transport:
         type: sqs

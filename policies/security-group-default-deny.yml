@@ -25,7 +25,10 @@ policies:
     - type: notify
       action_desc: |
         Custodian removed all rules, ingress and egress, from the default
-        security group. No further action is required.
+        security group. This security group should never be used. No further
+        action is required.
+      cc: ["#000000"]
+      subject: "Default VPC Security Group Set to Deny"
       to: ["slack"]
       transport:
         type: sqs

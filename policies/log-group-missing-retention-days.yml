@@ -16,6 +16,8 @@ policies:
       days: 1
     - type: notify
       action_desc: "Custodian has set the retention period to 1 day."
+      cc: ["#000000"]
+      subject: "Log Group Missing Retention Settings"
       to: ["slack"]
       transport:
         type: sqs

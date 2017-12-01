@@ -57,6 +57,7 @@ policies:
     - type: notify
       action_desc: |
         EC2 instance(s) are no longer marked to be stopped.
+      cc: ["good"]
       to: ["slack"]
       transport:
         type: sqs

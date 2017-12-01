@@ -59,6 +59,7 @@ policies:
       action_desc: |
         Custodian has deleted unattached, EBS volumes that were maked for
         deletion. No action is required.
+      cc: ["#000000"]
       to: ["slack"]
       transport:
         type: sqs

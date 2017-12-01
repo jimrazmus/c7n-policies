@@ -44,6 +44,7 @@ policies:
       action_desc: |
         Custodian unmarked S3 bucket(s) that have had global grants removed.
         No further action is required.
+      cc: ["good"]
       to: ["slack"]
       transport:
         type: sqs
@@ -70,6 +71,7 @@ policies:
       action_desc: |
         Custodian removed global grants from previously marked S3 bucket(s).
         No further action is required.
+      cc: ["#000000"]
       to: ["slack"]
       transport:
         type: sqs

@@ -4,7 +4,7 @@ policies:
   comment: "Delete unencrypted, non-root, EBS volumes on creation."
   resource: ebs
   filters:
-    - "tag:c7n_volume_encryption_exempt": absent
+    - "tag:c7n_ebs_volume_encryption_exempt": absent
     - Encrypted: false
     - not:
       - type: value

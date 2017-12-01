@@ -3,7 +3,7 @@ policies:
 - name: account-service-limit-increase
   resource: account
   comment: |
-    Detect impending service limits and automatically request an increase.
+    Request a 25% increase in any service limit that reaches 80% of maximum.
   filters:
     - type: service-limit
   mode:

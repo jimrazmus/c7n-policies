@@ -3,9 +3,9 @@ policies:
 - name: s3-tag-compliance-mark
   resource: s3
   comment: |
-    Find all s3 buckets that are not conformant
-    to tagging policies, tag them as such,
-    and send a notification.
+    Find all s3 buckets that are not compliant
+    to tagging policies, tags them as such,
+    and sends a notification.
   filters:
     - "tag:c7n_tag_compliance": absent
     - or:
@@ -34,7 +34,7 @@ policies:
 - name: s3-tag-compliance-unmark
   resource: s3
   comment: |
-    Unmark s3 buckets that are now conformant to tagging policies.
+    Unmark s3 buckets that are now compliant to tagging policies.
   filters:
     - "tag:c7n_tag_compliance": 'non-conformant'
     - "tag:data_class": not-null
@@ -53,7 +53,7 @@ policies:
 - name: s3-tag-compliance-notify
   resource: s3
   comment: |
-    Notify of s3 buckets that remain not conformant to tagging requirements.
+    Notify of s3 buckets that remain not compliant to tagging policies.
   filters:
     - "tag:c7n_tag_compliance": 'non-conformant'
     - or:

@@ -1,7 +1,7 @@
 policies:
 
 - name: ebs-volume-notify-if-unencrypted
-  comment: "Notify of non-root, unencrypted, EBS volumes."
+  comment: "Notify of non-root, unencrypted, EBS volumes when created."
   resource: ebs
   filters:
     - Encrypted: false

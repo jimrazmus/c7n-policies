@@ -3,8 +3,8 @@ policies:
 - name: ec2-tag-compliance-mark
   resource: ec2
   comment: |
-    Find all (non-ASG) instances that are not conformant
-    to tagging policies, tag them for stoppage in 1 day
+    Find all (non-ASG) instances that are not compliant
+    to tagging policies, tag them for stoppage in 1 day,
     and send a notification.
   filters:
     - "tag:aws:autoscaling:groupName": absent
@@ -37,9 +37,8 @@ policies:
 - name: ec2-tag-compliance-unmark
   resource: ec2
   comment: |
-    Any instances which have previously been marked as
-    non compliant with tag policies, that are now compliant
-    should be unmarked as non-compliant.
+    Unmark any instances which have previously been marked as
+    not complying with tag policies but are now compliant.
   filters:
     - "tag:aws:autoscaling:groupName": absent
     - "tag:c7n_tag_compliance": not-null
@@ -67,9 +66,9 @@ policies:
 - name: ec2-tag-compliance-stop
   resource: ec2
   comment: |
-    Stop all non autoscaling group instances previously marked for stoppage by
-    today's date, and schedule termination. Also verify that they continue to
-    not meet tagging policies.
+    Stop all (non-ASG) instances previously marked for stoppage by today's
+    date, and schedule them for termination after verifying that they continue
+    to be non-compliant to tagging policies.
   filters:
     - "tag:aws:autoscaling:groupName": absent
     - type: marked-for-op
@@ -105,12 +104,20 @@ policies:
   resource: ec2
   comment: |
     Terminate all stopped instances marked for termination
-    by today's date.
+    by today's date after verifying that they continue
+    to be non-compliant to tagging policies.
   filters:
     - "tag:aws:autoscaling:groupName": absent
     - type: marked-for-op
       tag: c7n_tag_compliance
       op: terminate
+    - or:
+      - "tag:data_class": absent
+      - "tag:department": absent
+      - "tag:division": absent
+      - "tag:env": absent
+      - "tag:owner": absent
+      - "tag:service": absent
   mode:
     schedule: "rate(6 hours)"
     type: periodic
@@ -121,14 +128,22 @@ policies:
 - name: ec2-tag-compliance-nag-stop
   resource: ec2
   comment: |
-    Stop all instances marked for termination every hour
-    starting 1 day before their termination.
+    Stop all instances marked for termination every hour, starting 1 day before
+    their termination, after verifying that they continue to be non-compliant
+    to tagging policies.
   filters:
     - "tag:aws:autoscaling:groupName": absent
     - type: marked-for-op
       tag: c7n_tag_compliance
       op: terminate
       skew: 1
+    - or:
+      - "tag:data_class": absent
+      - "tag:department": absent
+      - "tag:division": absent
+      - "tag:env": absent
+      - "tag:owner": absent
+      - "tag:service": absent
   mode:
     schedule: "rate(60 minutes)"
     type: periodic

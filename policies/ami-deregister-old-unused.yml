@@ -1,6 +1,9 @@
 policies:
 
 - name: ami-deregister-old-unused-mark
+  comment: |
+    Mark AMIs that are unused and 30+ days old for deregistration in 5 days and
+    send a notification.
   resource: ami
   filters:
     - "tag:c7n_ami_deregister_old_unused": absent
@@ -28,6 +31,8 @@ policies:
       violation_desc: "Custodian detected unused AMI(s) that are 30+ days old."
 
 - name: ami-deregister-old-unused-unmark
+  comment: |
+    Unmark any AMI that was previosly marked but is now in use.
   resource: ami
   filters:
     - "tag:c7n_ami_deregister_old_unused": present
@@ -53,6 +58,8 @@ policies:
         AMIs previously marked for deregistration are now in use.
 
 - name: ami-deregister-old-unused
+  comment: |
+    Deregister marked AMIs after verifying they remain unused.
   resource: ami
   filters:
     - "tag:c7n_ami_deregister_old_unused": present

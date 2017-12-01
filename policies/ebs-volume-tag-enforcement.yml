@@ -3,8 +3,8 @@ policies:
 - name: ebs-volume-tag-compliance-mark
   resource: ebs
   comment: |
-    Find all attached EBS volumes that are not conformant to tagging policies,
-    attempt to copy the instance tags, and tag as non-conformant.
+    Find all attached EBS volumes that are not compliant to tagging policies,
+    attempt to copy the instance tags, and tag as not compliant.
   filters:
     - "tag:c7n_tag_compliance": absent
     - type: value
@@ -36,7 +36,7 @@ policies:
 - name: ebs-volume-tag-compliance-unmark
   resource: ebs
   comment: |
-    Unmark all EBS volumes that are now conformant to tagging policies.
+    Unmark all EBS volumes that are now compliant to tagging policies.
   filters:
     - "tag:c7n_tag_compliance": 'non-conformant'
     - "tag:data_class": not-null
@@ -55,7 +55,7 @@ policies:
 - name: ebs-volume-tag-compliance-notify
   resource: ebs
   comment: |
-    Notify on EBS volumes that remain non-conformant to tagging policies in
+    Notify on EBS volumes that remain non-compliant to tagging policies in
     spite of an automated correction attempt.
   filters:
     - "tag:c7n_tag_compliance": 'non-conformant'

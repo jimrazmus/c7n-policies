@@ -3,7 +3,7 @@ policies:
 - name: ebs-volume-missing-recent-snapshot
   resource: ebs
   comment: |
-    Warn about volumes missing a recent snapshot and create one.
+    Warn about EBS volumes missing a recent snapshot and create one.
   filters:
     - type: fault-tolerant
       tolerant: False

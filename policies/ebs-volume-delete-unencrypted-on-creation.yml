@@ -4,6 +4,8 @@ policies:
   comment: "Delete unencrypted EBS volumes on creation."
   resource: ebs
   filters:
+    - XXX non-root?
+    - "tag:c7n_volume_encryption_exempt": absent
     - Encrypted: false
   mode:
     type: cloudtrail

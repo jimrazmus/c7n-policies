@@ -1,12 +1,16 @@
 policies:
 
 - name: ebs-volume-delete-unencrypted-on-creation
-  comment: "Delete unencrypted EBS volumes on creation."
+  comment: "Delete unencrypted, non-root, EBS volumes on creation."
   resource: ebs
   filters:
-    - XXX non-root?
     - "tag:c7n_volume_encryption_exempt": absent
     - Encrypted: false
+    - not:
+      - type: value
+        key: "Attachments[].Device"
+        op: regex
+        value: ^/dev/(sda1|xvda)$
   mode:
     type: cloudtrail
     events:
@@ -17,6 +21,7 @@ policies:
       action_desc: |
         Custodian has deleted the unencrypted volume. Please modify volume
         creation to include encryption.
+      subject: "EBS Volume Not Encrypted"
       to: ["slack"]
       transport:
         type: sqs

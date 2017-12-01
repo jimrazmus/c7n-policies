@@ -16,6 +16,8 @@ policies:
       action_desc: |
         Custodian has created a snapshot. Please review volume backup and
         recovery requirements.
+      cc: ["#000000"]
+      subject: "EBS Volume Missing Recent Snapshot"
       to: ["slack"]
       transport:
         type: sqs

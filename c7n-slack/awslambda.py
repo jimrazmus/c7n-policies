@@ -47,7 +47,7 @@ def lambda_handler(event, context):
                 'channel': os.environ['slack_channel'],
                 'attachments': [
                     {
-                        "title": m.get('action').get('subject', "Policy Violation Detected")
+                        "title": m['action'].get('subject', "Policy Violation Detected"),
                         "fields": [
                             {
                                 "title": "Policy",
@@ -60,7 +60,7 @@ def lambda_handler(event, context):
                                 "short": True
                             }
                         ],
-                        "color": m.get('action').get('cc', "#F35A00")
+                        "color": """ + m['action'].get('cc', "#F35A00") + """
                     },
                     {
                         'title': "Violation",

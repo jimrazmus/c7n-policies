@@ -42,6 +42,13 @@ def lambda_handler(event, context):
             # Markdown format the message resources
             r = '```' + json.dumps(m['resources'], indent=4, sort_keys=True) + '```'
 
+            # Change color if there is one
+            color = m['action'].get('cc')
+            if color:
+                color = color[0]
+            else:
+                color = '#F35A00'
+
             # Compose the Slack message
             slack_message = {
                 'channel': os.environ['slack_channel'],
@@ -60,7 +67,7 @@ def lambda_handler(event, context):
                                 "short": True
                             }
                         ],
-                        "color": """ + m['action'].get('cc', "#F35A00") + """
+                        "color": color
                     },
                     {
                         'title': "Violation",

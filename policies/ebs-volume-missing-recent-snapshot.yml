@@ -5,6 +5,7 @@ policies:
   comment: |
     Warn about EBS volumes missing a recent snapshot and create one.
   filters:
+    - "tag:c7n_ebs_volume_missing_recent_snapshot_exempt": absent
     - type: fault-tolerant
       tolerant: False
   mode:

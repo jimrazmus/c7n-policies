@@ -74,6 +74,7 @@ policies:
       action_desc: |
         Custodian attempted to copy ec2 instance tags to the EBS volume but it
         remains non-comformant. Please correctly tag the EBS volume.
+      subject: "EBS Volume Tag Compliance"
       to: ["slack"]
       transport:
            type: sqs

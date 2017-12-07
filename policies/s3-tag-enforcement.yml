@@ -25,6 +25,7 @@ policies:
     - type: notify
       action_desc: |
         Please correctly tag S3 buckets.
+      subject: "S3 Bucket Tag Compliance"
       to: ["slack"]
       transport:
         type: sqs
@@ -70,6 +71,7 @@ policies:
     - type: notify
       action_desc: |
         Please correctly tag S3 buckets.
+      subject: "S3 Bucket Tag Compliance"
       to: ["slack"]
       transport:
         type: sqs

@@ -18,6 +18,7 @@ policies:
       action_desc: |
         Custodian has marked the volumes for deletion in 14 days. Please backup
         the volume and/or attach it.
+      subject: "EBS Volume Maintenance"
       to: ["slack"]
       transport:
         type: sqs
@@ -60,6 +61,7 @@ policies:
         Custodian has deleted unattached, EBS volumes that were maked for
         deletion. No action is required.
       cc: ["#000000"]
+      subject: "EBS Volume Maintenance"
       to: ["slack"]
       transport:
         type: sqs

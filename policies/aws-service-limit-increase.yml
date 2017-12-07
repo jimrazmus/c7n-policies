@@ -15,6 +15,7 @@ policies:
     - type: notify
       action_desc: "Submitted service limit increase request of 25 percent."
       cc: ["#000000"]
+      subject: "Limit Increase Was Requested"
       to: ["slack"]
       transport:
         type: sqs

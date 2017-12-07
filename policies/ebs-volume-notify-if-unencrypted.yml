@@ -17,6 +17,7 @@ policies:
   actions:
     - type: notify
       action_desc: "Please encrypt the volume."
+      subject: "EBS Volume Encryption"
       to: ["slack"]
       transport:
         type: sqs

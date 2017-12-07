@@ -38,7 +38,7 @@ policies:
   comment: |
     Unmark all EBS volumes that are now compliant to tagging policies.
   filters:
-    - "tag:c7n_tag_compliance": 'non-conformant'
+    - "tag:c7n_tag_compliance": not-null
     - "tag:data_class": not-null
     - "tag:department": not-null
     - "tag:division": not-null
@@ -58,7 +58,7 @@ policies:
     Notify on EBS volumes that remain non-compliant to tagging policies in
     spite of an automated correction attempt.
   filters:
-    - "tag:c7n_tag_compliance": 'non-conformant'
+    - "tag:c7n_tag_compliance": not-null
     - or:
       - "tag:data_class": absent
       - "tag:department": absent

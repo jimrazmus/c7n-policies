@@ -54,33 +54,33 @@ def lambda_handler(event, context):
                 'channel': os.environ['slack_channel'],
                 'attachments': [
                     {
-                        "title": m['action'].get('subject', "Policy Violation Detected"),
-                        "fields": [
+                        'title': m['action'].get('subject', 'Policy Violation Detected'),
+                        'fields': [
                             {
-                                "title": "Policy",
-                                "value": m['policy']['name'],
-                                "short": True
+                                'title': 'Policy',
+                                'value': m['policy']['name'],
+                                'short': True
                             },
                             {
-                                "title": "Account ID :: Region",
-                                "value": m['account_id'] + "::" + m['region'],
-                                "short": True
+                                'title': 'Account ID :: Region',
+                                'value': m['account_id'] + '::' + m['region'],
+                                'short': True
                             }
                         ],
-                        "color": color
+                        'color': color
                     },
                     {
-                        'title': "Violation",
+                        'title': 'Violation',
                         'text': m['action']['violation_desc']
                     },
                     {
-                        'title': "Action",
+                        'title': 'Action',
                         'text': m['action']['action_desc']
                     },
                     {
                         'title': 'Resources',
                         'text': r,
-                        "mrkdwn_in": ["text"]
+                        'mrkdwn_in': ['text']
                     }
                 ]
             }

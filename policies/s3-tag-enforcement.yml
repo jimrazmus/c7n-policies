@@ -6,6 +6,7 @@ policies:
     Find all s3 buckets that are not compliant
     to tagging policies, tags them as such,
     and sends a notification.
+  region: us-east-1
   filters:
     - "tag:c7n_tag_compliance": absent
     - or:
@@ -36,6 +37,7 @@ policies:
   resource: s3
   comment: |
     Unmark s3 buckets that are now compliant to tagging policies.
+  region: us-east-1
   filters:
     - "tag:c7n_tag_compliance": not-null
     - "tag:data_class": not-null
@@ -55,6 +57,7 @@ policies:
   resource: s3
   comment: |
     Notify of s3 buckets that remain not compliant to tagging policies.
+  region: us-east-1
   filters:
     - "tag:c7n_tag_compliance": not-null
     - or:

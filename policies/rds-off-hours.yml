@@ -1,0 +1,29 @@
+- name: rds-off-hours-stop
+  resource: rds
+  comments: |
+    Stop RDS instances as per schedule in c7n_off_hours
+  mode:
+      type: periodic
+      schedule: "rate(30 minutes)"
+  filters:
+    - "tag:c7n_do_not_shut_down": absent
+    - type: offhour
+      default_tz: utc
+      tag: c7n_off_hours
+  actions:
+    - stop
+
+- name: rds-off-hours-start
+  resource: ec2
+  comments: |
+    Start RDS instances as per schedule in c7n_off_hours
+  mode:
+      type: periodic
+      schedule: "rate(30 minutes)"
+  filters:
+    - "tag:c7n_do_not_shut_down": absent
+    - type: onhour
+      default_tz: utc
+      tag: c7n_off_hours
+  actions:
+    - start

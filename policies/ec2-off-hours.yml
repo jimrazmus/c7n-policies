@@ -2,15 +2,15 @@
   resource: ec2
   comments: |
     Stop EC2 instances as per schedule in c7n_off_hours
-  mode:
-      type: periodic
-      schedule: "rate(60 minutes)"
   filters:
     - "tag:c7n_do_not_shut_down": absent
     - type: offhour
       default_tz: utc
       offhour: 1
       tag: c7n_off_hours
+  mode:
+      schedule: "rate(60 minutes)"
+      type: periodic
   actions:
     - stop
 
@@ -18,14 +18,14 @@
   resource: ec2
   comments: |
     Start EC2 instances as per schedule in c7n_off_hours
-  mode:
-      type: periodic
-      schedule: "rate(60 minutes)"
   filters:
     - "tag:c7n_do_not_shut_down": absent
     - type: onhour
       default_tz: utc
       onhour: 13
       tag: c7n_off_hours
+  mode:
+      schedule: "rate(60 minutes)"
+      type: periodic
   actions:
     - start

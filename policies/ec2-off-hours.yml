@@ -1,3 +1,5 @@
+policies:
+
 - name: ec2-off-hours-stop
   resource: ec2
   comments: |

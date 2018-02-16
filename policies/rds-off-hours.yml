@@ -1,3 +1,5 @@
+policies:
+
 - name: rds-off-hours-stop
   resource: rds
   comments: |

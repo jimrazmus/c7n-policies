@@ -10,7 +10,7 @@ policies:
       - type: value
         key: "Attachments[].Device"
         op: regex
-        value: ^/dev/(sda1|xvda)$
+        value: ^/dev/(sda1|xvda|nvme0n1)$
   mode:
     type: cloudtrail
     events:

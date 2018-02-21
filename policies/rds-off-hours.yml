@@ -17,7 +17,7 @@ policies:
     - stop
 
 - name: rds-off-hours-start
-  resource: ec2
+  resource: rds
   comments: |
     Start RDS instances as per schedule in c7n_off_hours
   filters:

@@ -1,0 +1,32 @@
+policies:
+
+- name: security-group-restrict-admin-ingress
+  resource: security-group
+  comment: "Remove rules allowing unrestricted ingress to ports [22, 3389]"
+  filters:
+    - "tag:c7n_security_group_restrict_admin_ingress_exempt": absent
+    - type: ingress
+      Ports: [22,3389]
+      Cidr:
+        value: 0.0.0.0/0
+        op: eq
+        value_type: cidr
+  mode:
+    type: cloudtrail
+    events:
+      - source: ec2.amazonaws.com
+        event: AuthorizeSecurityGroupIngress
+        ids: "requestParameters.groupId"
+  actions:
+    - type: remove-permissions
+      ingress: matched
+    - type: notify
+      action_desc: "Ingress to ports [22, 3389] have been removed."
+      cc: ["warning"]
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        AWS security group allowed unrestricted access to ports [22, 3389].
+        Offending rules were removed.

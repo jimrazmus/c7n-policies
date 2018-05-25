@@ -1,0 +1,15 @@
+policies:
+
+- name: asg-off-hours-enforcement
+  resource: asg
+  comments: |
+    Opt in autoscaling groups without a c7n_off_hours tag
+  filters:
+    - "tag:c7n_off_hours": absent
+  mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+  actions:
+    - type: tag
+      key: c7n_off_hours
+      value: true

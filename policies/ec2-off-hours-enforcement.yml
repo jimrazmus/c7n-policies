@@ -6,10 +6,11 @@ policies:
     Opt in EC2 instances without a c7n_off_hours tag
   filters:
     - "tag:c7n_off_hours": absent
+    - "tag:aws:autoscaling:groupName": absent
   mode:
       schedule: "rate(24 hours)"
       type: periodic
   actions:
     - type: tag
       key: c7n_off_hours
-      value: true
+      value: "on"

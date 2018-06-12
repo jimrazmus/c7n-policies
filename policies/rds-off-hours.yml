@@ -9,6 +9,7 @@ policies:
     - type: offhour
       default_tz: gmt
       offhour: 1
+      onhour: 13
       tag: c7n_off_hours
   mode:
       schedule: "rate(60 minutes)"
@@ -24,6 +25,7 @@ policies:
     - "tag:c7n_do_not_shut_down": absent
     - type: onhour
       default_tz: gmt
+      offhour: 1
       onhour: 13
       tag: c7n_off_hours
   mode:

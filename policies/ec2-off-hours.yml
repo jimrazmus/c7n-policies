@@ -12,6 +12,8 @@ policies:
       offhour: 1
       onhour: 13
       tag: c7n_off_hours
+    - type: instance-age
+      hours: 1
   mode:
       schedule: "rate(60 minutes)"
       type: periodic

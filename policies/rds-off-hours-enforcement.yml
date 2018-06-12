@@ -12,4 +12,4 @@ policies:
   actions:
     - type: tag
       key: c7n_off_hours
-      value: true
+      value: "on"

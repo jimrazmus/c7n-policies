@@ -8,7 +8,7 @@ policies:
     - "tag:c7n_do_not_shut_down": absent
     - "tag:aws:autoscaling:groupName": absent
     - type: offhour
-      default_tz: gmt
+      default_tz: "Etc/GMT"
       offhour: 0
       onhour: 12
       tag: c7n_off_hours
@@ -28,7 +28,7 @@ policies:
     - "tag:c7n_do_not_shut_down": absent
     - "tag:aws:autoscaling:groupName": absent
     - type: onhour
-      default_tz: gmt
+      default_tz: "Etc/GMT"
       offhour: 0
       onhour: 12
       tag: c7n_off_hours

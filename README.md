@@ -46,7 +46,7 @@ Policies can be run from your laptop or as AWS Lambdas.
 Deploy the lambdas with this command
 
 ```
-custodian run \
+#> custodian run \
 -v -m -s ./logs/ -l /YourLogGroup -r all \
 --assume \
 "arn:aws:iam::123123123123:role/c7nLambdaExecutionRole" \

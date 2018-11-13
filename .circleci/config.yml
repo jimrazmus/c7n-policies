@@ -9,6 +9,7 @@ jobs:
   build:
     executor: python
     steps:
+      - checkout
       - run:
           name: install c7n
           command: pip install --user c7n

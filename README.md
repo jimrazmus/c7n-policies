@@ -8,6 +8,13 @@ Cloud Custodian is a tool that unifies the dozens of tools and scripts most orga
 
 Read the [Cloud Custodian documentation](http://www.capitalone.io/cloud-custodian/docs/) for more details.
 
+## Policy Validation
+
+Policies are automatically validated via [CircleCI](https://circleci.com/gh/jimrazmus/c7n-policies/tree/master). It runs Cloud Custodian in a Docker container that includes:
+
+* Python version 2.7.14
+* Cloud Custodian version 0.8.31.2
+
 ## Client Installation
 
 ### Cloud Custodian

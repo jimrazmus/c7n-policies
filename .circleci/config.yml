@@ -1,23 +1,23 @@
-version: 2.1
-
-executors:
-  python:
-    docker:
-      - image: circleci/python:2.7.14
-
+version: 2
 jobs:
   build:
-    executor: python
+    docker:
+    - image: circleci/python:2.7.14
     steps:
-      - checkout
-      - run:
-          name: install c7n
-          command: pip install --user c7n
-      - run:
-          name: custodian version
-          command: /home/circleci/.local/bin/custodian version
-      - run:
-          name: validate policies
-          command: |
-            cd $CIRCLE_WORKING_DIRECTORY/policies
-            /home/circleci/.local/bin/custodian validate
+    - checkout
+    - run:
+        name: install c7n
+        command: pip install --user c7n==0.8.31.2
+    - run:
+        name: custodian version
+        command: ~/.local/bin/custodian version
+    - run:
+        name: validate policies
+        command: |
+          cd ~/project/policies
+          ls *.yml | xargs -n1  ~/.local/bin/custodian validate
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - build

@@ -1,5 +1,7 @@
 # Cloud Custodian Policies
 
+[![CircleCI](https://circleci.com/gh/jimrazmus/c7n-policies/tree/master.svg?style=svg)](https://circleci.com/gh/jimrazmus/c7n-policies/tree/master)
+
 This repo contains the policy documents that the Cloud Custodian program will consume.
 
 Cloud Custodian is a tool that unifies the dozens of tools and scripts most organizations use for managing their AWS accounts into one open source tool. It’s a stateless rules engine for policy definition and enforcement, with metrics and detailed reporting for AWS.

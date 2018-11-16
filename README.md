@@ -17,7 +17,7 @@ Policies are automatically validated via [CircleCI](https://circleci.com/gh/jimr
 
 ## AWS Account Installation
 
-Leverage CloudFormation these templates as a reference for creating message queues and a role for the lambdas to run:
+Leverage CloudFormation and these templates as a reference for creating message queues and a role for the lambdas to run:
 
 * [c7nSQSMessageQueues-CloudFormation.yml](c7n-core/c7nSQSMessageQueues-CloudFormation.yml)
 * [c7nLambdaExecutionRole-CloudFormation.yml](c7n-core/c7nLambdaExecutionRole-CloudFormation.yml)

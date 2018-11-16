@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/jimrazmus/c7n-policies/tree/master.svg?style=svg)](https://circleci.com/gh/jimrazmus/c7n-policies/tree/master)
 
-This repo contains the policy documents that the Cloud Custodian program will consume.
+This repo contains policy documents that Cloud Custodian will consume.
 
 Cloud Custodian is a tool that unifies the dozens of tools and scripts most organizations use for managing their AWS accounts into one open source tool. It’s a stateless rules engine for policy definition and enforcement, with metrics and detailed reporting for AWS.
 
@@ -15,27 +15,9 @@ Policies are automatically validated via [CircleCI](https://circleci.com/gh/jimr
 * Python version 2.7.14
 * Cloud Custodian version 0.8.31.2
 
-## Client Installation
-
-### Cloud Custodian
-
-I use the [developer installation](http://www.capitalone.io/cloud-custodian/docs/developer/installing.html) of Cloud Custodian to keep up with the rapid improvements and new features.
-
-You will find the 'custodian' program in your path when the installation is completed successfully. Verify by running the following command.
-
-```
-#> custodian version
-```
-
-### c7n Policies Repository
-
-Check out a copy of this code repository if you haven't already. All policy documents are managed here.
-
 ## AWS Account Installation
 
-### Message Queues and Lambda Execution Role
-
-Leverage CloudFormation to install these templates:
+Leverage CloudFormation these templates as a reference for creating message queues and a role for the lambdas to run:
 
 * [c7nSQSMessageQueues-CloudFormation.yml](c7n-core/c7nSQSMessageQueues-CloudFormation.yml)
 * [c7nLambdaExecutionRole-CloudFormation.yml](c7n-core/c7nLambdaExecutionRole-CloudFormation.yml)
@@ -45,19 +27,7 @@ Leverage CloudFormation to install these templates:
 One or more policies are defined in a yaml file. A policy specifies the following items:
 
 * The type of resource to run the policy against
-* Filters to narrow down the set of resources
+* Filters to select the set of target resources
 * Actions to take on the filtered set of resources
 
 Policies can be run from your laptop or as AWS Lambdas.
-
-## Deploy Policies as Lambdas
-
-Deploy the lambdas with this command
-
-```
-#> custodian run \
--v -m -s ./logs/ -l /YourLogGroup -r all \
---assume \
-"arn:aws:iam::123123123123:role/c7nLambdaExecutionRole" \
-YourPolicyFile1.yml YourPolicyFile2.yml ...
-```

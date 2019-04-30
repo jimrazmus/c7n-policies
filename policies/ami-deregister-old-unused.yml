@@ -76,7 +76,8 @@ policies:
     schedule: "rate(6 hours)"
     type: periodic
   actions:
-    - deregister
+    - type: deregister
+      delete-snapshots: true
     - type: notify
       action_desc: |
         No action required. Custodian completed the AMI deregistration.

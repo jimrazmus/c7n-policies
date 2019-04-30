@@ -79,6 +79,7 @@ policies:
       type: periodic
     actions:
       - deregister
+        delete-snapshots: true
       - type: notify
         action_desc: |
           No action required. Custodian completed the AMI deregistration.

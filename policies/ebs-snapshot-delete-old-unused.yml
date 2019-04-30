@@ -6,6 +6,7 @@ policies:
     comments: |
       Delete old, unused, EBS snapshots
     filters:
+      - "tag:c7n_ebs_snapshot_delete_old_unused_exempt": absent
       - type: age
         days: 30
         op: ge

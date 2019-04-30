@@ -15,7 +15,7 @@ jobs:
         name: lint yaml
         command: |
           cd ~/project/policies
-          yamllint .
+          ~/.local/bin/yamllint .
     - run:
         name: custodian version
         command: ~/.local/bin/custodian version

@@ -7,7 +7,7 @@ jobs:
     - checkout
     - run:
         name: install c7n
-        command: pip install --user c7n==0.8.31.2
+        command: pip install --user c7n==0.8.43.1
     - run:
         name: custodian version
         command: ~/.local/bin/custodian version

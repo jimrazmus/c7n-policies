@@ -1,85 +1,86 @@
+---
 policies:
 
-- name: s3-global-grants-mark
-  comment: |
-    Find all S3 buckets with global grants, tag them for grant removal, and
-    send a notification.
-  region: us-east-1
-  resource: s3
-  filters:
-    - "tag:c7n_s3_global_grants": absent
-    - type: global-grants
-  mode:
-    schedule: "rate(24 hours)"
-    type: periodic
-  actions:
-    - type: mark-for-op
-      tag: c7n_s3_global_grants
-      op: delete-global-grants
-      days: 7
-    - type: notify
-      action_desc: |
-        Custodian marked the S3 buckets for global grant removal in 7 days.
-      subject: "S3 Bucket Security"
-      to: ["slack"]
-      transport:
-        type: sqs
-        queue: c7nMessageQueue
-      violation_desc: |
-        Custodian detected S3 bucket(s) with global grants.
-
-- name: s3-global-grants-unmark
-  comment: |
-    Unmark all S3 buckets which no longer have global grants.
-  region: us-east-1
-  resource: s3
-  filters:
-    - "tag:c7n_s3_global_grants": not-null
-    - not:
+  - name: s3-global-grants-mark
+    comment: |
+      Find all S3 buckets with global grants, tag them for grant removal, and
+      send a notification.
+    region: us-east-1
+    resource: s3
+    filters:
+      - "tag:c7n_s3_global_grants": absent
       - type: global-grants
-  mode:
-    schedule: "rate(24 hours)"
-    type: periodic
-  actions:
-    - type: unmark
-      tags: [c7n_s3_global_grants]
-    - type: notify
-      action_desc: |
-        Custodian unmarked S3 bucket(s) that have had global grants removed.
-        No further action is required.
-      cc: ["good"]
-      subject: "S3 Bucket Security"
-      to: ["slack"]
-      transport:
-        type: sqs
-        queue: c7nMessageQueue
-      violation_desc: "S3 bucket(s) had global grants."
+    mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+    actions:
+      - type: mark-for-op
+        tag: c7n_s3_global_grants
+        op: delete-global-grants
+        days: 7
+      - type: notify
+        action_desc: |
+          Custodian marked the S3 buckets for global grant removal in 7 days.
+        subject: "S3 Bucket Security"
+        to: ["slack"]
+        transport:
+          type: sqs
+          queue: c7nMessageQueue
+        violation_desc: |
+          Custodian detected S3 bucket(s) with global grants.
 
-- name: s3-global-grants-remove
-  resource: s3
-  comment: |
-    Remove global grants from S3 buckets marked for today's date.
-  region: us-east-1
-  filters:
-    - type: global-grants
-    - type: marked-for-op
-      tag: c7n_s3_global_grants
-      op: delete-global-grants
-  mode:
-    schedule: "rate(24 hours)"
-    type: periodic
-  actions:
-    - type: delete-global-grants
-    - type: unmark
-      tags: [c7n_s3_global_grants]
-    - type: notify
-      action_desc: |
-        Custodian removed global grants from previously marked S3 bucket(s).
-        No further action is required.
-      cc: ["#000000"]
-      subject: "S3 Bucket Security"
-      to: ["slack"]
-      transport:
-        type: sqs
-        queue: c7nMessageQueue
-      violation_desc: "S3 bucket had global grants."
+  - name: s3-global-grants-unmark
+    comment: |
+      Unmark all S3 buckets which no longer have global grants.
+    region: us-east-1
+    resource: s3
+    filters:
+      - "tag:c7n_s3_global_grants": not-null
+      - not:
+          - type: global-grants
+    mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+    actions:
+      - type: unmark
+        tags: [c7n_s3_global_grants]
+      - type: notify
+        action_desc: |
+          Custodian unmarked S3 bucket(s) that have had global grants removed.
+          No further action is required.
+        cc: ["good"]
+        subject: "S3 Bucket Security"
+        to: ["slack"]
+        transport:
+          type: sqs
+          queue: c7nMessageQueue
+        violation_desc: "S3 bucket(s) had global grants."
+
+  - name: s3-global-grants-remove
+    resource: s3
+    comment: |
+      Remove global grants from S3 buckets marked for today's date.
+    region: us-east-1
+    filters:
+      - type: global-grants
+      - type: marked-for-op
+        tag: c7n_s3_global_grants
+        op: delete-global-grants
+    mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+    actions:
+      - type: delete-global-grants
+      - type: unmark
+        tags: [c7n_s3_global_grants]
+      - type: notify
+        action_desc: |
+          Custodian removed global grants from previously marked S3 bucket(s).
+          No further action is required.
+        cc: ["#000000"]
+        subject: "S3 Bucket Security"
+        to: ["slack"]
+        transport:
+          type: sqs
+          queue: c7nMessageQueue
+        violation_desc: "S3 bucket had global grants."

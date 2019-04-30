@@ -1,27 +1,28 @@
+---
 policies:
 
-- name: ebs-volume-missing-recent-snapshot
-  resource: ebs
-  comment: |
-    Warn about EBS volumes missing a recent snapshot and create one.
-  filters:
-    - "tag:c7n_ebs_volume_missing_recent_snapshot_exempt": absent
-    - type: fault-tolerant
-      tolerant: False
-  mode:
-    schedule: "rate(60 minutes)"
-    type: periodic
-  actions:
-    - snapshot
-    - type: notify
-      action_desc: |
-        Custodian has created a snapshot. Please review volume backup and
-        recovery requirements.
-      cc: ["#000000"]
-      subject: "EBS Volume Missing Recent Snapshot"
-      to: ["slack"]
-      transport:
-        type: sqs
-        queue: c7nMessageQueue
-      violation_desc: |
-        Custodian detected EBS volume(s) w/o a snapshot in the last 7 days.
+  - name: ebs-volume-missing-recent-snapshot
+    resource: ebs
+    comment: |
+      Warn about EBS volumes missing a recent snapshot and create one.
+    filters:
+      - "tag:c7n_ebs_volume_missing_recent_snapshot_exempt": absent
+      - type: fault-tolerant
+        tolerant: false
+    mode:
+      schedule: "rate(60 minutes)"
+      type: periodic
+    actions:
+      - snapshot
+      - type: notify
+        action_desc: |
+          Custodian has created a snapshot. Please review volume backup and
+          recovery requirements.
+        cc: ["#000000"]
+        subject: "EBS Volume Missing Recent Snapshot"
+        to: ["slack"]
+        transport:
+          type: sqs
+          queue: c7nMessageQueue
+        violation_desc: |
+          Custodian detected EBS volume(s) w/o a snapshot in the last 7 days.

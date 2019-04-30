@@ -1,82 +1,83 @@
+---
 policies:
 
-- name: ebs-volume-tag-compliance-mark
-  resource: ebs
-  comment: |
-    Find all attached EBS volumes that are not compliant to tagging policies,
-    attempt to copy the instance tags, and tag as not compliant.
-  filters:
-    - "tag:c7n_tag_compliance": absent
-    - type: value
-      key: "Attachments[0].Device"
-      value: not-null
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
-  mode:
-    schedule: "rate(60 minutes)"
-    type: periodic
-  actions:
-    - type: copy-instance-tags
-      tags:
-        - data_class
-        - department
-        - division
-        - env
-        - owner
-        - service
-    - type: tag
-      key: c7n_tag_compliance
-      value: 'non-conformant'
+  - name: ebs-volume-tag-compliance-mark
+    resource: ebs
+    comment: |
+      Find all attached EBS volumes that are not compliant to tagging policies,
+      attempt to copy the instance tags, and tag as not compliant.
+    filters:
+      - "tag:c7n_tag_compliance": absent
+      - type: value
+        key: "Attachments[0].Device"
+        value: not-null
+      - or:
+          - "tag:data_class": absent
+          - "tag:department": absent
+          - "tag:division": absent
+          - "tag:env": absent
+          - "tag:owner": absent
+          - "tag:service": absent
+    mode:
+      schedule: "rate(60 minutes)"
+      type: periodic
+    actions:
+      - type: copy-instance-tags
+        tags:
+          - data_class
+          - department
+          - division
+          - env
+          - owner
+          - service
+      - type: tag
+        key: c7n_tag_compliance
+        value: 'non-conformant'
 
-- name: ebs-volume-tag-compliance-unmark
-  resource: ebs
-  comment: |
-    Unmark all EBS volumes that are now compliant to tagging policies.
-  filters:
-    - "tag:c7n_tag_compliance": not-null
-    - "tag:data_class": not-null
-    - "tag:department": not-null
-    - "tag:division": not-null
-    - "tag:env": not-null
-    - "tag:owner": not-null
-    - "tag:service": not-null
-  mode:
-    schedule: "rate(30 minutes)"
-    type: periodic
-  actions:
-    - type: unmark
-      tags: [c7n_tag_compliance]
+  - name: ebs-volume-tag-compliance-unmark
+    resource: ebs
+    comment: |
+      Unmark all EBS volumes that are now compliant to tagging policies.
+    filters:
+      - "tag:c7n_tag_compliance": not-null
+      - "tag:data_class": not-null
+      - "tag:department": not-null
+      - "tag:division": not-null
+      - "tag:env": not-null
+      - "tag:owner": not-null
+      - "tag:service": not-null
+    mode:
+      schedule: "rate(30 minutes)"
+      type: periodic
+    actions:
+      - type: unmark
+        tags: [c7n_tag_compliance]
 
-- name: ebs-volume-tag-compliance-notify
-  resource: ebs
-  comment: |
-    Notify on EBS volumes that remain non-compliant to tagging policies in
-    spite of an automated correction attempt.
-  filters:
-    - "tag:c7n_tag_compliance": not-null
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
-  mode:
-    schedule: "rate(24 hours)"
-    type: periodic
-  actions:
-    - type: notify
-      action_desc: |
-        Custodian attempted to copy ec2 instance tags to the EBS volume but it
-        remains non-comformant. Please correctly tag the EBS volume.
-      subject: "EBS Volume Tag Compliance"
-      to: ["slack"]
-      transport:
-           type: sqs
-           queue: c7nMessageQueue
-      violation_desc: "EBS volumes must have the required tags."
+  - name: ebs-volume-tag-compliance-notify
+    resource: ebs
+    comment: |
+      Notify on EBS volumes that remain non-compliant to tagging policies in
+      spite of an automated correction attempt.
+    filters:
+      - "tag:c7n_tag_compliance": not-null
+      - or:
+          - "tag:data_class": absent
+          - "tag:department": absent
+          - "tag:division": absent
+          - "tag:env": absent
+          - "tag:owner": absent
+          - "tag:service": absent
+    mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+    actions:
+      - type: notify
+        action_desc: |
+          Custodian attempted to copy ec2 instance tags to the EBS volume but it
+          remains non-comformant. Please correctly tag the EBS volume.
+        subject: "EBS Volume Tag Compliance"
+        to: ["slack"]
+        transport:
+          type: sqs
+          queue: c7nMessageQueue
+        violation_desc: "EBS volumes must have the required tags."

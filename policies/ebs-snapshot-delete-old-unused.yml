@@ -1,18 +1,19 @@
+---
 policies:
 
-- name: ebs-snapshot-delete-old-unused
-  resource: ebs-snapshot
-  comments: |
-    Delete old, unused, EBS snapshots
-  filters:
-    - "tag:c7n_ebs_snapshot_delete_old_unused_exempt": absent
-    - type: age
-      days: 30
-      op: ge
-    - type: unused
-      value: true
-  mode:
-    schedule: "rate(24 hours)"
-    type: periodic
-  actions:
-   - delete
+  - name: ebs-snapshot-delete-old-unused
+    resource: ebs-snapshot
+    comments: |
+      Delete old, unused, EBS snapshots
+    filters:
+      - "tag:c7n_ebs_snapshot_delete_old_unused_exempt": absent
+      - type: age
+        days: 30
+        op: ge
+      - type: unused
+        value: true
+    mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+    actions:
+      - delete

@@ -1,70 +1,71 @@
+---
 policies:
 
-- name: rds-tag-compliance-mark
-  resource: rds
-  comment: |
-    Find all rds that are not compliant to tagging policies
-    and tag as such.
-  filters:
-    - "tag:c7n_tag_compliance": absent
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
-  mode:
-    schedule: "rate(60 minutes)"
-    type: periodic
-  actions:
-    - type: tag
-      key: c7n_tag_compliance
-      value: 'non-conformant'
+  - name: rds-tag-compliance-mark
+    resource: rds
+    comment: |
+      Find all rds that are not compliant to tagging policies
+      and tag as such.
+    filters:
+      - "tag:c7n_tag_compliance": absent
+      - or:
+          - "tag:data_class": absent
+          - "tag:department": absent
+          - "tag:division": absent
+          - "tag:env": absent
+          - "tag:owner": absent
+          - "tag:service": absent
+    mode:
+      schedule: "rate(60 minutes)"
+      type: periodic
+    actions:
+      - type: tag
+        key: c7n_tag_compliance
+        value: 'non-conformant'
 
-- name: rds-tag-compliance-unmark
-  resource: rds
-  comment: |
-    Unmark all rds that are now compliant to tagging policies.
-  filters:
-    - "tag:c7n_tag_compliance": not-null
-    - "tag:data_class": not-null
-    - "tag:department": not-null
-    - "tag:division": not-null
-    - "tag:env": not-null
-    - "tag:owner": not-null
-    - "tag:service": not-null
-  mode:
-    schedule: "rate(30 minutes)"
-    type: periodic
-  actions:
-    - type: unmark
-      tags: [c7n_tag_compliance]
+  - name: rds-tag-compliance-unmark
+    resource: rds
+    comment: |
+      Unmark all rds that are now compliant to tagging policies.
+    filters:
+      - "tag:c7n_tag_compliance": not-null
+      - "tag:data_class": not-null
+      - "tag:department": not-null
+      - "tag:division": not-null
+      - "tag:env": not-null
+      - "tag:owner": not-null
+      - "tag:service": not-null
+    mode:
+      schedule: "rate(30 minutes)"
+      type: periodic
+    actions:
+      - type: unmark
+        tags: [c7n_tag_compliance]
 
-- name: rds-tag-compliance-notify
-  resource: rds
-  comment: |
-    Notify on rds that remain non-compliant to tagging policies.
-  filters:
-    - "tag:c7n_tag_compliance": not-null
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
-  mode:
-    schedule: "rate(24 hours)"
-    type: periodic
-  actions:
-    - type: notify
-      action_desc: |
-        Custodian has tagged rds that are not compliant with tagging
-        requirements. Please correctly tag rds resources.
-      subject: "RDS Tag Compliance"
-      to: ["slack"]
-      transport:
-           type: sqs
-           queue: c7nMessageQueue
-      violation_desc: "RDS resources must have the required tags."
+  - name: rds-tag-compliance-notify
+    resource: rds
+    comment: |
+      Notify on rds that remain non-compliant to tagging policies.
+    filters:
+      - "tag:c7n_tag_compliance": not-null
+      - or:
+          - "tag:data_class": absent
+          - "tag:department": absent
+          - "tag:division": absent
+          - "tag:env": absent
+          - "tag:owner": absent
+          - "tag:service": absent
+    mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+    actions:
+      - type: notify
+        action_desc: |
+          Custodian has tagged rds that are not compliant with tagging
+          requirements. Please correctly tag rds resources.
+        subject: "RDS Tag Compliance"
+        to: ["slack"]
+        transport:
+          type: sqs
+          queue: c7nMessageQueue
+        violation_desc: "RDS resources must have the required tags."

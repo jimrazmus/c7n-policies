@@ -1,23 +1,24 @@
+---
 policies:
 
-- name: account-service-limit-increase
-  resource: account
-  comment: |
-    Request a 25% increase in any service limit that reaches 80% of maximum.
-  filters:
-    - type: service-limit
-  mode:
-    schedule: "rate(24 hours)"
-    type: periodic
-  actions:
-    - type: request-limit-increase
-      percent-increase: 25
-    - type: notify
-      action_desc: "Submitted service limit increase request of 25 percent."
-      cc: ["#000000"]
-      subject: "Limit Increase Was Requested"
-      to: ["slack"]
-      transport:
-        type: sqs
-        queue: c7nMessageQueue
-      violation_desc: "Service limit hit 80 percent of max."
+  - name: account-service-limit-increase
+    resource: account
+    comment: |
+      Request a 25% increase in any service limit that reaches 80% of maximum.
+    filters:
+      - type: service-limit
+    mode:
+      schedule: "rate(24 hours)"
+      type: periodic
+    actions:
+      - type: request-limit-increase
+        percent-increase: 25
+      - type: notify
+        action_desc: "Submitted service limit increase request of 25 percent."
+        cc: ["#000000"]
+        subject: "Limit Increase Was Requested"
+        to: ["slack"]
+        transport:
+          type: sqs
+          queue: c7nMessageQueue
+        violation_desc: "Service limit hit 80 percent of max."

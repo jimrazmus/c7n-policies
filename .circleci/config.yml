@@ -9,6 +9,14 @@ jobs:
         name: install c7n
         command: pip install --user c7n==0.8.43.1
     - run:
+        name: install yamllint
+        command: pip install --user yamllint
+    - run:
+        name: lint yaml
+        command: |
+          cd ~/project/policies
+          ~/.local/bin/yamllint .
+    - run:
         name: custodian version
         command: ~/.local/bin/custodian version
     - run:

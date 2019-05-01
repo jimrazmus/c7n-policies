@@ -1,3 +1,5 @@
 *.DS_Store
 /logs
 venv
+/python2.7
+/docs

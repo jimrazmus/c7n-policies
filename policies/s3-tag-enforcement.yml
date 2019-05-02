@@ -1,3 +1,19 @@
+vars:
+  absent-tags-filter: &absent-tags
+    - "tag:data_class": absent
+    - "tag:department": absent
+    - "tag:division": absent
+    - "tag:env": absent
+    - "tag:owner": absent
+    - "tag:service": absent
+  not-null-tags-filter: &not-null-tags
+    - "tag:data_class": not-null
+    - "tag:department": not-null
+    - "tag:division": not-null
+    - "tag:env": not-null
+    - "tag:owner": not-null
+    - "tag:service": not-null
+
 policies:
 
 - name: s3-tag-compliance-mark
@@ -9,13 +25,7 @@ policies:
   region: us-east-1
   filters:
     - "tag:c7n_tag_compliance": absent
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(24 hours)"
     type: periodic
@@ -40,12 +50,7 @@ policies:
   region: us-east-1
   filters:
     - "tag:c7n_tag_compliance": not-null
-    - "tag:data_class": not-null
-    - "tag:department": not-null
-    - "tag:division": not-null
-    - "tag:env": not-null
-    - "tag:owner": not-null
-    - "tag:service": not-null
+    - and: *not-null-tags
   mode:
     schedule: "rate(24 hours)"
     type: periodic
@@ -60,13 +65,7 @@ policies:
   region: us-east-1
   filters:
     - "tag:c7n_tag_compliance": not-null
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(24 hours)"
     type: periodic

@@ -1,3 +1,19 @@
+vars:
+  absent-tags-filter: &absent-tags
+    - "tag:data_class": absent
+    - "tag:department": absent
+    - "tag:division": absent
+    - "tag:env": absent
+    - "tag:owner": absent
+    - "tag:service": absent
+  not-null-tags-filter: &not-null-tags
+    - "tag:data_class": not-null
+    - "tag:department": not-null
+    - "tag:division": not-null
+    - "tag:env": not-null
+    - "tag:owner": not-null
+    - "tag:service": not-null
+
 policies:
 
 - name: rds-tag-compliance-mark
@@ -7,13 +23,7 @@ policies:
     and tag as such.
   filters:
     - "tag:c7n_tag_compliance": absent
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(60 minutes)"
     type: periodic
@@ -28,12 +38,7 @@ policies:
     Unmark all rds that are now compliant to tagging policies.
   filters:
     - "tag:c7n_tag_compliance": not-null
-    - "tag:data_class": not-null
-    - "tag:department": not-null
-    - "tag:division": not-null
-    - "tag:env": not-null
-    - "tag:owner": not-null
-    - "tag:service": not-null
+    - and: *not-null-tags
   mode:
     schedule: "rate(30 minutes)"
     type: periodic
@@ -47,13 +52,7 @@ policies:
     Notify on rds that remain non-compliant to tagging policies.
   filters:
     - "tag:c7n_tag_compliance": not-null
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(24 hours)"
     type: periodic

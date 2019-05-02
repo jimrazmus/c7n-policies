@@ -1,3 +1,19 @@
+vars:
+  absent-tags-filter: &absent-tags
+    - "tag:data_class": absent
+    - "tag:department": absent
+    - "tag:division": absent
+    - "tag:env": absent
+    - "tag:owner": absent
+    - "tag:service": absent
+  not-null-tags-filter: &not-null-tags
+    - "tag:data_class": not-null
+    - "tag:department": not-null
+    - "tag:division": not-null
+    - "tag:env": not-null
+    - "tag:owner": not-null
+    - "tag:service": not-null
+
 policies:
 
 - name: ec2-tag-compliance-mark
@@ -9,13 +25,7 @@ policies:
   filters:
     - "tag:aws:autoscaling:groupName": absent
     - "tag:c7n_tag_compliance": absent
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(60 minutes)"
     type: periodic
@@ -43,12 +53,7 @@ policies:
   filters:
     - "tag:aws:autoscaling:groupName": absent
     - "tag:c7n_tag_compliance": not-null
-    - "tag:data_class": not-null
-    - "tag:department": not-null
-    - "tag:division": not-null
-    - "tag:env": not-null
-    - "tag:owner": not-null
-    - "tag:service": not-null
+    - and: *not-null-tags
   mode:
     schedule: "rate(30 minutes)"
     type: periodic
@@ -77,13 +82,7 @@ policies:
     - type: marked-for-op
       tag: c7n_tag_compliance
       op: stop
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(60 minutes)"
     type: periodic
@@ -116,13 +115,7 @@ policies:
     - type: marked-for-op
       tag: c7n_tag_compliance
       op: terminate
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(6 hours)"
     type: periodic
@@ -153,13 +146,7 @@ policies:
       tag: c7n_tag_compliance
       op: terminate
       skew: 1
-    - or:
-      - "tag:data_class": absent
-      - "tag:department": absent
-      - "tag:division": absent
-      - "tag:env": absent
-      - "tag:owner": absent
-      - "tag:service": absent
+    - or: *absent-tags
   mode:
     schedule: "rate(60 minutes)"
     type: periodic

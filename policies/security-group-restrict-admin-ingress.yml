@@ -1,7 +1,7 @@
 policies:
 
 - name: security-group-restrict-admin-ingress
-  resource: security-group
+  resource: aws.security-group
   comment: "Remove rules allowing unrestricted ingress to ports [22, 3389]"
   filters:
     - "tag:c7n_security_group_restrict_admin_ingress_exempt": absent

@@ -1,7 +1,7 @@
 policies:
 
 - name: rds-off-hours-stop
-  resource: rds
+  resource: aws.rds
   comments: |
     Stop RDS instances as per schedule in c7n_off_hours
   filters:
@@ -17,7 +17,7 @@ policies:
     - stop
 
 - name: rds-off-hours-start
-  resource: rds
+  resource: aws.rds
   comments: |
     Start RDS instances as per schedule in c7n_off_hours
   filters:

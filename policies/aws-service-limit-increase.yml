@@ -1,7 +1,7 @@
 policies:
 
 - name: account-service-limit-increase
-  resource: account
+  resource: aws.account
   comment: |
     Request a 25% increase in any service limit that reaches 80% of maximum.
   filters:

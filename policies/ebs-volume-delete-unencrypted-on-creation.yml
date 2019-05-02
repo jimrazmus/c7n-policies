@@ -2,7 +2,7 @@ policies:
 
 - name: ebs-volume-delete-unencrypted-on-creation
   comment: "Delete unencrypted, non-root, EBS volumes on creation."
-  resource: ebs
+  resource: aws.ebs
   filters:
     - "tag:c7n_ebs_volume_encryption_exempt": absent
     - Encrypted: false

@@ -17,7 +17,7 @@ vars:
 policies:
 
 - name: s3-tag-compliance-mark
-  resource: s3
+  resource: aws.s3
   comment: |
     Find all s3 buckets that are not compliant
     to tagging policies, tags them as such,
@@ -44,7 +44,7 @@ policies:
       violation_desc: "S3 buckets must have the required tags."
 
 - name: s3-tag-compliance-unmark
-  resource: s3
+  resource: aws.s3
   comment: |
     Unmark s3 buckets that are now compliant to tagging policies.
   region: us-east-1
@@ -59,7 +59,7 @@ policies:
       tags: [c7n_tag_compliance]
 
 - name: s3-tag-compliance-notify
-  resource: s3
+  resource: aws.s3
   comment: |
     Notify of s3 buckets that remain not compliant to tagging policies.
   region: us-east-1

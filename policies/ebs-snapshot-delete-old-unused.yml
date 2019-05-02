@@ -1,7 +1,7 @@
 policies:
 
 - name: ebs-snapshot-delete-old-unused
-  resource: ebs-snapshot
+  resource: aws.ebs-snapshot
   comments: |
     Delete old, unused, EBS snapshots
   filters:

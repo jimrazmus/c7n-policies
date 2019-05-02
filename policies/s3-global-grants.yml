@@ -5,7 +5,7 @@ policies:
     Find all S3 buckets with global grants, tag them for grant removal, and
     send a notification.
   region: us-east-1
-  resource: s3
+  resource: aws.s3
   filters:
     - "tag:c7n_s3_global_grants": absent
     - type: global-grants
@@ -32,7 +32,7 @@ policies:
   comment: |
     Unmark all S3 buckets which no longer have global grants.
   region: us-east-1
-  resource: s3
+  resource: aws.s3
   filters:
     - "tag:c7n_s3_global_grants": not-null
     - not:
@@ -56,7 +56,7 @@ policies:
       violation_desc: "S3 bucket(s) had global grants."
 
 - name: s3-global-grants-remove
-  resource: s3
+  resource: aws.s3
   comment: |
     Remove global grants from S3 buckets marked for today's date.
   region: us-east-1

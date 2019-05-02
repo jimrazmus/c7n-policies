@@ -1,7 +1,7 @@
 policies:
 
 - name: ec2-off-hours-enforcement
-  resource: ec2
+  resource: aws.ec2
   comments: |
     Opt in EC2 instances without a c7n_off_hours tag
   filters:

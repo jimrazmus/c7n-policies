@@ -17,7 +17,7 @@ vars:
 policies:
 
 - name: rds-tag-compliance-mark
-  resource: rds
+  resource: aws.rds
   comment: |
     Find all rds that are not compliant to tagging policies
     and tag as such.
@@ -33,7 +33,7 @@ policies:
       value: 'non-conformant'
 
 - name: rds-tag-compliance-unmark
-  resource: rds
+  resource: aws.rds
   comment: |
     Unmark all rds that are now compliant to tagging policies.
   filters:
@@ -47,7 +47,7 @@ policies:
       tags: [c7n_tag_compliance]
 
 - name: rds-tag-compliance-notify
-  resource: rds
+  resource: aws.rds
   comment: |
     Notify on rds that remain non-compliant to tagging policies.
   filters:

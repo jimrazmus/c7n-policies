@@ -1,7 +1,7 @@
 policies:
 
 - name: asg-off-hours-enforcement
-  resource: asg
+  resource: aws.asg
   comments: |
     Opt in autoscaling groups without a c7n_off_hours tag
   filters:

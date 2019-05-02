@@ -4,7 +4,7 @@ policies:
   comment: |
     Mark AMIs that are unused and 30+ days old for deregistration in 5 days and
     send a notification.
-  resource: ami
+  resource: aws.ami
   filters:
     - "tag:c7n_ami_deregister_old_unused": absent
     - "tag:c7n_ami_deregister_old_unused_exempt": absent
@@ -34,7 +34,7 @@ policies:
 - name: ami-deregister-old-unused-unmark
   comment: |
     Unmark any AMI that was previosly marked but is now in use or exempt.
-  resource: ami
+  resource: aws.ami
   filters:
     - "tag:c7n_ami_deregister_old_unused": present
     - or:
@@ -63,7 +63,7 @@ policies:
 - name: ami-deregister-old-unused
   comment: |
     Deregister marked AMIs after verifying they remain unused and not exempt.
-  resource: ami
+  resource: aws.ami
   filters:
     - "tag:c7n_ami_deregister_old_unused": present
     - "tag:c7n_ami_deregister_old_unused_exempt": absent

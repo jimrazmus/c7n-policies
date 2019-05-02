@@ -1,6 +1,6 @@
 policies:
 - name: log-group-missing-retention-days
-  resource: log-group
+  resource: aws.log-group
   comment: |
     Detect CloudWatch Log Groups with no retention setting and set it to
     one day.

@@ -17,7 +17,7 @@ vars:
 policies:
 
 - name: ec2-tag-compliance-mark
-  resource: ec2
+  resource: aws.ec2
   comment: |
     Find all (non-ASG) instances that are not compliant
     to tagging policies, tag them for stoppage in 1 day,
@@ -46,7 +46,7 @@ policies:
       violation_desc: "EC2 instances must have the required tags."
 
 - name: ec2-tag-compliance-unmark
-  resource: ec2
+  resource: aws.ec2
   comment: |
     Unmark any instances which have previously been marked as
     not complying with tag policies but are now compliant.
@@ -72,7 +72,7 @@ policies:
       violation_desc: "EC2 instances have the required tags."
 
 - name: ec2-tag-compliance-stop
-  resource: ec2
+  resource: aws.ec2
   comment: |
     Stop all (non-ASG) instances previously marked for stoppage by today's
     date, and schedule them for termination after verifying that they continue
@@ -105,7 +105,7 @@ policies:
       violation_desc: "EC2 instances must have the required tags."
 
 - name: ec2-tag-compliance-terminate
-  resource: ec2
+  resource: aws.ec2
   comment: |
     Terminate all stopped instances marked for termination
     by today's date after verifying that they continue
@@ -135,7 +135,7 @@ policies:
       violation_desc: "EC2 instances must have the required tags."
 
 - name: ec2-tag-compliance-nag-stop
-  resource: ec2
+  resource: aws.ec2
   comment: |
     Stop all instances marked for termination every hour, starting 1 day before
     their termination, after verifying that they continue to be non-compliant

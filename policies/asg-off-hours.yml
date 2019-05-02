@@ -1,7 +1,7 @@
 policies:
 
 - name: asg-off-hours-stop
-  resource: asg
+  resource: aws.asg
   comments: |
     Suspend autoscaling groups as per schedule in c7n_off_hours
   filters:

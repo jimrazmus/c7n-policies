@@ -24,7 +24,7 @@ vars:
 policies:
 
 - name: ebs-volume-tag-compliance-mark
-  resource: ebs
+  resource: aws.ebs
   comment: |
     Find all attached EBS volumes that are not compliant to tagging policies,
     attempt to copy the instance tags, and tag as not compliant.
@@ -45,7 +45,7 @@ policies:
       value: 'non-conformant'
 
 - name: ebs-volume-tag-compliance-unmark
-  resource: ebs
+  resource: aws.ebs
   comment: |
     Unmark all EBS volumes that are now compliant to tagging policies.
   filters:
@@ -59,7 +59,7 @@ policies:
       tags: [c7n_tag_compliance]
 
 - name: ebs-volume-tag-compliance-notify
-  resource: ebs
+  resource: aws.ebs
   comment: |
     Notify on EBS volumes that remain non-compliant to tagging policies in
     spite of an automated correction attempt.

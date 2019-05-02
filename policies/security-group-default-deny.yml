@@ -2,7 +2,7 @@ policies:
 
 - name: security-group-default-deny
   comment: "Remove all rules from the VPC default security group"
-  resource: security-group
+  resource: aws.security-group
   filters:
     - type: value
       key: "GroupName"

@@ -2,7 +2,7 @@ policies:
 
 - name: ebs-volume-delete-unattached-mark
   comment: "Mark unattached, EBS volumes for deletion."
-  resource: ebs
+  resource: aws.ebs
   filters:
     - "tag:c7n_ebs_volume_delete_unattached": absent
     - Attachments: []
@@ -29,7 +29,7 @@ policies:
 - name: ebs-volume-delete-unattached-unmark
   comments: |
     Unmark attached, EBS volumes that were previously marked for deletion.
-  resource: ebs
+  resource: aws.ebs
   filters:
     - "tag:c7n_ebs_volume_delete_unattached": not-null
     - type: value
@@ -45,7 +45,7 @@ policies:
 - name: ebs-volume-delete-unattached
   comments: |
     Delete unattached, EBS volumes that were marked for deletion.
-  resource: ebs
+  resource: aws.ebs
   filters:
     - type: marked-for-op
       tag: c7n_ebs_volume_delete_unattached

@@ -55,7 +55,7 @@ policies:
     schedule: "rate(24 hours)"
     type: periodic
   actions:
-    - type: unmark
+    - type: remove-tag
       tags: [c7n_tag_compliance]
 
 - name: s3-tag-compliance-notify

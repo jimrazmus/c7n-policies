@@ -58,7 +58,7 @@ policies:
     schedule: "rate(30 minutes)"
     type: periodic
   actions:
-    - type: unmark
+    - type: remove-tag
       tags: [c7n_tag_compliance]
     - type: notify
       action_desc: |

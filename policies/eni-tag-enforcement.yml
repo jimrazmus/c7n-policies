@@ -43,7 +43,7 @@ policies:
     schedule: "rate(12 hours)"
     type: periodic
   actions:
-    - type: unmark
+    - type: remove-tag
       tags: [c7n_tag_compliance]
 
 - name: eni-tag-compliance-notify

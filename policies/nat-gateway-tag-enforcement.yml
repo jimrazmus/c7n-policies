@@ -13,56 +13,43 @@ vars:
     - "tag:env": not-null
     - "tag:owner": not-null
     - "tag:service": not-null
-  list-of-tags: &list-tags
-    - data_class
-    - department
-    - division
-    - env
-    - owner
-    - service
 
 policies:
 
-- name: ebs-volume-tag-compliance-mark
-  resource: aws.ebs
+- name: nat-gateway-tag-compliance-mark
+  resource: aws.nat-gateway
   comment: |
-    Find all attached EBS volumes that are not compliant to tagging policies,
-    attempt to copy the instance tags, and tag as not compliant.
+    Find all nat-gateway that are not compliant to tagging policies
+    and tag as such.
   filters:
     - "tag:c7n_tag_compliance": absent
-    - type: value
-      key: "Attachments[0].Device"
-      value: not-null
     - or: *absent-tags
   mode:
-    schedule: "rate(60 minutes)"
+    schedule: "rate(12 hours)"
     type: periodic
   actions:
-    - type: copy-instance-tags
-      tags: *list-tags
     - type: tag
       key: c7n_tag_compliance
       value: 'non-conformant'
 
-- name: ebs-volume-tag-compliance-unmark
-  resource: aws.ebs
+- name: nat-gateway-tag-compliance-unmark
+  resource: aws.nat-gateway
   comment: |
-    Unmark all EBS volumes that are now compliant to tagging policies.
+    Unmark all nat-gateway that are now compliant to tagging policies.
   filters:
     - "tag:c7n_tag_compliance": not-null
     - and: *not-null-tags
   mode:
-    schedule: "rate(30 minutes)"
+    schedule: "rate(12 hours)"
     type: periodic
   actions:
     - type: remove-tag
       tags: [c7n_tag_compliance]
 
-- name: ebs-volume-tag-compliance-notify
-  resource: aws.ebs
+- name: nat-gateway-tag-compliance-notify
+  resource: aws.nat-gateway
   comment: |
-    Notify on EBS volumes that remain non-compliant to tagging policies in
-    spite of an automated correction attempt.
+    Notify on nat-gateway that remain non-compliant to tagging policies.
   filters:
     - "tag:c7n_tag_compliance": not-null
     - or: *absent-tags
@@ -72,11 +59,11 @@ policies:
   actions:
     - type: notify
       action_desc: |
-        Custodian attempted to copy ec2 instance tags to the EBS volume but it
-        remains non-comformant. Please correctly tag the EBS volume.
-      subject: "EBS Volume Tag Compliance"
+        Custodian has tagged nat-gateway that are not compliant with tagging
+        requirements. Please correctly tag nat-gateway resources.
+      subject: "NAT Gateway Tag Compliance"
       to: ["slack"]
       transport:
            type: sqs
            queue: c7nMessageQueue
-      violation_desc: "EBS volumes must have the required tags."
+      violation_desc: "NAT Gateway resources must have the required tags."

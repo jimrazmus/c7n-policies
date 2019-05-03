@@ -1,0 +1,69 @@
+vars:
+  absent-tags-filter: &absent-tags
+    - "tag:data_class": absent
+    - "tag:department": absent
+    - "tag:division": absent
+    - "tag:env": absent
+    - "tag:owner": absent
+    - "tag:service": absent
+  not-null-tags-filter: &not-null-tags
+    - "tag:data_class": not-null
+    - "tag:department": not-null
+    - "tag:division": not-null
+    - "tag:env": not-null
+    - "tag:owner": not-null
+    - "tag:service": not-null
+
+policies:
+
+- name: eni-tag-compliance-mark
+  resource: aws.eni
+  comment: |
+    Find all eni that are not compliant to tagging policies
+    and tag as such.
+  filters:
+    - "tag:c7n_tag_compliance": absent
+    - or: *absent-tags
+  mode:
+    schedule: "rate(12 hours)"
+    type: periodic
+  actions:
+    - type: tag
+      key: c7n_tag_compliance
+      value: 'non-conformant'
+
+- name: eni-tag-compliance-unmark
+  resource: aws.eni
+  comment: |
+    Unmark all eni that are now compliant to tagging policies.
+  filters:
+    - "tag:c7n_tag_compliance": not-null
+    - and: *not-null-tags
+  mode:
+    schedule: "rate(12 hours)"
+    type: periodic
+  actions:
+    - type: unmark
+      tags: [c7n_tag_compliance]
+
+- name: eni-tag-compliance-notify
+  resource: aws.eni
+  comment: |
+    Notify on eni that remain non-compliant to tagging policies.
+  filters:
+    - "tag:c7n_tag_compliance": not-null
+    - or: *absent-tags
+  mode:
+    schedule: "rate(24 hours)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        Custodian has tagged eni that are not compliant with tagging
+        requirements. Please correctly tag eni resources.
+      subject: "ENI Tag Compliance"
+      to: ["slack"]
+      transport:
+           type: sqs
+           queue: c7nMessageQueue
+      violation_desc: "ENI resources must have the required tags."

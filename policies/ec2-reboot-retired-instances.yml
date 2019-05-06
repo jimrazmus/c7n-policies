@@ -1,7 +1,7 @@
 policies:
 
 - name: ec2-reboot-retired-instances
-  resource: ec2
+  resource: aws.ec2
   comments: |
     Reboot non-ASG EC2 instances that are flagged for retirement.
   filters:

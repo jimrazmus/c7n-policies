@@ -1,0 +1,32 @@
+policies:
+
+- name: ec2-reboot-retired-instances
+  resource: ec2
+  comments: |
+    Reboot non-ASG EC2 instances that are flagged for retirement.
+  filters:
+    - "tag:aws:autoscaling:groupName": absent
+    - type: health-event
+      statuses: [open,upcoming]
+      types:
+        - AWS_EC2_DEDICATED_HOST_RETIREMENT_SCHEDULED
+        - AWS_EC2_INSTANCE_RETIREMENT_EXPEDITED
+        - AWS_EC2_INSTANCE_RETIREMENT_SCHEDULED
+        - AWS_EC2_PERSISTENT_INSTANCE_RETIREMENT_EXPEDITED
+        - AWS_EC2_PERSISTENT_INSTANCE_RETIREMENT_SCHEDULED
+  mode:
+    type: periodic
+    schedule: "cron(15 13 ? * TUE *)"
+  actions:
+    - type: notify
+      action_desc: |
+        Custodian is rebooting non-ASG EC2 instances flagged for retirement.
+      cc: ["#000000"]
+      subject: "EC2 Reboot Retired Instances"
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: |
+        EC2 instances have been flagged for retirement.
+    - reboot

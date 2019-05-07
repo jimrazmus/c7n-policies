@@ -7,7 +7,7 @@ policies:
     - "tag:c7n_ebs_volume_delete_unattached": absent
     - Attachments: []
   mode:
-    schedule: "rate(60 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: mark-for-op
@@ -36,7 +36,7 @@ policies:
       key: "Attachments[0].Device"
       value: not-null
   mode:
-    schedule: "rate(30 minutes)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: unmark
@@ -52,7 +52,7 @@ policies:
       op: delete
     - Attachments: []
   mode:
-    schedule: "rate(6 hours)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - delete

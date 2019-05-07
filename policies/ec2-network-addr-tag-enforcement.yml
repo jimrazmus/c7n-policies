@@ -25,7 +25,7 @@ policies:
     - "tag:c7n_tag_compliance": absent
     - or: *absent-tags
   mode:
-    schedule: "rate(12 hours)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: tag
@@ -40,7 +40,7 @@ policies:
     - "tag:c7n_tag_compliance": not-null
     - and: *not-null-tags
   mode:
-    schedule: "rate(12 hours)"
+    schedule: "rate(24 hours)"
     type: periodic
   actions:
     - type: remove-tag

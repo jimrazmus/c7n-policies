@@ -10,5 +10,5 @@
   "scripts": {
     "version": "auto-changelog -p -t keepachangelog && git add CHANGELOG.md"
   },
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

@@ -16,7 +16,7 @@ vars:
 
 policies:
 
-- name: ec2-network-addr-tag-compliance-mark
+- name: network-addr-tag-compliance-mark
   resource: aws.network-addr
   comment: |
     Find all network-addr that are not compliant to tagging policies
@@ -32,7 +32,7 @@ policies:
       key: c7n_tag_compliance
       value: 'non-conformant'
 
-- name: ec2-network-addr-tag-compliance-unmark
+- name: network-addr-tag-compliance-unmark
   resource: aws.network-addr
   comment: |
     Unmark all network-addr that are now compliant to tagging policies.
@@ -46,7 +46,7 @@ policies:
     - type: remove-tag
       tags: [c7n_tag_compliance]
 
-- name: ec2-network-addr-tag-compliance-notify
+- name: network-addr-tag-compliance-notify
   resource: aws.network-addr
   comment: |
     Notify on network-addr that remain non-compliant to tagging policies.

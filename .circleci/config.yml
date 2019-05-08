@@ -15,7 +15,7 @@ jobs:
         name: validate policies
         command: |
           cd ~/project/policies
-          ls *.yml | xargs -n1  ~/.local/bin/custodian validate
+          ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian validate
 workflows:
   version: 2
   workflow:

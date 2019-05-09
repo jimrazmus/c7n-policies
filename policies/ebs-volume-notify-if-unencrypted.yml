@@ -1,7 +1,7 @@
 policies:
 
 - name: ebs-volume-notify-if-unencrypted
-  comment: "Notify of non-root, unencrypted, EBS volumes when created."
+  comment: "Notify of non-root, unencrypted, EBS volumes."
   resource: aws.ebs
   filters:
     - Encrypted: false
@@ -11,9 +11,8 @@ policies:
         op: regex
         value: ^/dev/(sda1|xvda)$
   mode:
-    type: cloudtrail
-    events:
-      - CreateVolume
+    schedule: "rate(24 hours)"
+    type: periodic
   actions:
     - type: notify
       action_desc: "Please encrypt the volume."
@@ -23,4 +22,4 @@ policies:
         type: sqs
         queue: c7nMessageQueue
       violation_desc: |
-        Custodian detected the creation of an unencrypted volume.
+        Custodian detected an unencrypted volume.

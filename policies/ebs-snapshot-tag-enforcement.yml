@@ -13,6 +13,13 @@ vars:
     - "tag:env": not-null
     - "tag:owner": not-null
     - "tag:service": not-null
+  list-of-tags: &list-tags
+    - data_class
+    - department
+    - division
+    - env
+    - owner
+    - service
 
 policies:
 
@@ -28,6 +35,11 @@ policies:
     schedule: "rate(12 hours)"
     type: periodic
   actions:
+    - type: copy-related-tag
+      resource: ebs
+      skip_missing: True
+      key: VolumeId
+      tags: *list-tags
     - type: tag
       key: c7n_tag_compliance
       value: 'non-conformant'

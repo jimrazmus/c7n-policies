@@ -60,4 +60,4 @@ workflows:
       - deploy-aws:
           context: aws-dev-c7n
           requires:
-            -validate
+            - validate

@@ -1,23 +1,63 @@
 version: 2
-jobs:
-  build:
+
+references:
+
+  container: &container
     docker:
-    - image: circleci/python:2.7.14
+      - image: circleci/python:2.7.14
+
+  getcache: &getcache
+    restore_cache:
+      key: c7n-{{ .Branch }}-{{ checksum "~/.local/bin/custodian" }}
+
+  install_c7n: &install_c7n
+    run:
+      name: install c7n
+      command: pip install --user c7n==0.8.43.1
+
+  putcache: &putcache
+    save_cache:
+      paths:
+        - ~/.local/bin
+      key: c7n-{{ .Branch }}-{{ checksum "~/.local/bin/custodian" }}
+
+jobs:
+
+  validate:
+    <<: *container
     steps:
-    - checkout
-    - run:
-        name: install c7n
-        command: pip install --user c7n==0.8.43.1
-    - run:
+      - checkout
+      - <<: *getcache
+      - <<: *install_c7n
+      - <<: *putcache
+      - run:
         name: custodian version
         command: ~/.local/bin/custodian version
-    - run:
+      - run:
         name: validate policies
         command: |
           cd ~/project/policies
           ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian validate
+
+  deploy-aws:
+    <<: *container
+    steps:
+      - checkout    
+      - <<: *getcache
+      - <<: *install_c7n
+      - <<: *putcache
+      - run:
+        name: deploy policies
+        command: |
+          cd ~/project/policies
+          ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian run -v -m -s s3://$S3_BUCKET -l /c7n ; 
+
 workflows:
   version: 2
-  workflow:
+  doit:
     jobs:
-    - build
+      - validate
+      - deploy-aws:
+          context: aws-dev-c7n
+          requires:
+            -validate

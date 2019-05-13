@@ -50,7 +50,7 @@ jobs:
         name: deploy policies
         command: |
           cd ~/project/policies
-          ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian run -v -m -s s3://$S3_BUCKET -l /c7n ; 
+          ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian run -v -m -s out -l /c7n ; 
 
 workflows:
   version: 2

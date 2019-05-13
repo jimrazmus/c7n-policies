@@ -50,7 +50,7 @@ jobs:
           name: deploy policies
           command: |
             cd ~/project/policies
-            ls *.yml | xargs -n1 ~/.local/bin/custodian run -v -m -s out -l /c7n ; 
+            ls *.yml | xargs -n1 ~/.local/bin/custodian run -v -m -s out -l /c7n --assume c7nLambdaExecutionRole ; 
 
 workflows:
   version: 2

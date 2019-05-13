@@ -2,16 +2,10 @@ vars:
   absent-tags-filter: &absent-tags
     - "tag:data_class": absent
     - "tag:department": absent
-    - "tag:division": absent
-    - "tag:env": absent
-    - "tag:owner": absent
     - "tag:service": absent
   not-null-tags-filter: &not-null-tags
     - "tag:data_class": not-null
     - "tag:department": not-null
-    - "tag:division": not-null
-    - "tag:env": not-null
-    - "tag:owner": not-null
     - "tag:service": not-null
 
 policies:

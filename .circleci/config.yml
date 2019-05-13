@@ -31,13 +31,13 @@ jobs:
       - <<: *install_c7n
       - <<: *putcache
       - run:
-        name: custodian version
-        command: ~/.local/bin/custodian version
+          name: custodian version
+          command: ~/.local/bin/custodian version
       - run:
-        name: validate policies
-        command: |
-          cd ~/project/policies
-          ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian validate
+          name: validate policies
+          command: |
+            cd ~/project/policies
+            ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian validate
 
   deploy-aws:
     <<: *container
@@ -47,10 +47,10 @@ jobs:
       - <<: *install_c7n
       - <<: *putcache
       - run:
-        name: deploy policies
-        command: |
-          cd ~/project/policies
-          ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian run -v -m -s out -l /c7n ; 
+          name: deploy policies
+          command: |
+            cd ~/project/policies
+            ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian run -v -m -s out -l /c7n ; 
 
 workflows:
   version: 2

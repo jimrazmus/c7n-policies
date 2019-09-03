@@ -7,7 +7,7 @@ jobs:
     - checkout
     - restore_cache:
         keys:
-         - c7n-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+         - c7n-{{ .Branch }}-{{ checksum "package.json" }}
          - c7n-{{ .Branch }}-
          - c7n-
     - run:
@@ -15,7 +15,7 @@ jobs:
         command: |
           pipenv install c7n==0.8.44.2
     - save_cache:
-        key: c7n-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+        key: c7n-{{ .Branch }}-{{ checksum "package.json" }}
         paths:
           - "~/.cache/pip"
           - "~/.local"

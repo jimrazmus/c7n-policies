@@ -7,6 +7,7 @@ policies:
   region: us-east-1
   resource: aws.s3
   filters:
+    - "tag:c7n_s3_global_grants_exempt": absent
     - "tag:c7n_s3_global_grants": absent
     - type: global-grants
   mode:
@@ -34,6 +35,7 @@ policies:
   region: us-east-1
   resource: aws.s3
   filters:
+    - "tag:c7n_s3_global_grants_exempt": absent
     - "tag:c7n_s3_global_grants": not-null
     - not:
       - type: global-grants
@@ -61,6 +63,7 @@ policies:
     Remove global grants from S3 buckets marked for today's date.
   region: us-east-1
   filters:
+    - "tag:c7n_s3_global_grants_exempt": absent
     - type: global-grants
     - type: marked-for-op
       tag: c7n_s3_global_grants
@@ -75,6 +78,32 @@ policies:
     - type: notify
       action_desc: |
         Custodian removed global grants from previously marked S3 bucket(s).
+        No further action is required.
+      cc: ["#000000"]
+      subject: "S3 Bucket Security"
+      to: ["slack"]
+      transport:
+        type: sqs
+        queue: c7nMessageQueue
+      violation_desc: "S3 bucket had global grants."
+
+- name: s3-global-grants-remove-on-creation
+  resource: aws.s3
+  comment: |
+    Remove global grants from S3 buckets at time of creation.
+  region: us-east-1
+  filters:
+    - "tag:c7n_s3_global_grants_exempt": absent
+    - type: global-grants
+  mode:
+    type: cloudtrail
+    events:
+      - CreateBucket
+  actions:
+    - type: delete-global-grants
+    - type: notify
+      action_desc: |
+        Custodian removed global grants from S3 bucket(s).
         No further action is required.
       cc: ["#000000"]
       subject: "S3 Bucket Security"

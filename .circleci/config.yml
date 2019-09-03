@@ -26,7 +26,7 @@ jobs:
         name: validate policies
         command: |
           cd ~/project/policies
-          ls *.yml | xargs -n1 -P 8 pipenv run custodian validate
+          ls *.yml | xargs -n1 -P 16 pipenv run custodian validate
 workflows:
   version: 2
   workflow:

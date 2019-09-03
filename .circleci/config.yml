@@ -5,9 +5,19 @@ jobs:
     - image: circleci/python:2.7.14
     steps:
     - checkout
+    - restore_cache:
+        keys:
+         - c7n-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+         - c7n-{{ .Branch }}-
+         - c7n-
     - run:
         name: install c7n
         command: pip install --user c7n==0.8.44.2
+    - save_cache:
+        key: c7n-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+        paths:
+          - "~/.cache/pip"
+          - "~/.local"
     - run:
         name: custodian version
         command: ~/.local/bin/custodian version

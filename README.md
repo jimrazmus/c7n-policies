@@ -13,7 +13,7 @@ Read the [Cloud Custodian documentation](http://www.capitalone.io/cloud-custodia
 Policies are automatically validated via [CircleCI](https://circleci.com/gh/jimrazmus/c7n-policies/tree/master). It runs Cloud Custodian in a Docker container that includes:
 
 * Python version 2.7.14
-* Cloud Custodian version 0.8.43.1
+* Cloud Custodian version 0.8.44.2
 
 ## AWS Account Installation
 

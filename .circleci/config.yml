@@ -5,17 +5,28 @@ jobs:
     - image: circleci/python:2.7.14
     steps:
     - checkout
+    - restore_cache:
+        keys:
+         - c7n-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+         - c7n-{{ .Branch }}-
+         - c7n-
     - run:
         name: install c7n
-        command: pip install --user c7n==0.8.44.2
+        command: |
+          pipenv install
+    - save_cache:
+        key: c7n-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+        paths:
+          - "~/.cache/pip"
+          - "~/.local"
     - run:
         name: custodian version
-        command: ~/.local/bin/custodian version
+        command: pipenv run custodian version
     - run:
         name: validate policies
         command: |
           cd ~/project/policies
-          ls *.yml | xargs -n1 -P 4 ~/.local/bin/custodian validate
+          ls *.yml | xargs -n1 -P 16 pipenv run custodian validate
 workflows:
   version: 2
   workflow:

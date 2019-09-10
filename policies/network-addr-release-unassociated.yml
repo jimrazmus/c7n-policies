@@ -1,0 +1,25 @@
+policies:
+
+- name: network-addr-release-unassociated
+  resource: aws.network-addr
+  comment: |
+    Release all unassociated network-addr (EIP).
+  filters:
+    - type: value
+      key: "AssociationID"
+      value: absent
+  mode:
+    schedule: "rate(24 hours)"
+    type: periodic
+  actions:
+    - type: notify
+      action_desc: |
+        Custodian has released unassociated network-addr (EIP).
+      subject: "Network Address (EIP) Released"
+      to: ["slack"]
+      transport:
+           type: sqs
+           queue: c7nMessageQueue
+      violation_desc: "Unassociated network-addr (EIP)."
+    - type: release
+      force: False
